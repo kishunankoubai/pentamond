@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html>
+    
+    <head>
+        
+        <meta charset = "UTF-8">
+        <title>Pentamond</title>
+        
+        <link rel="stylesheet" href="Layout.css">
+        
+    </head>
+    
+    <body>
+        
+        <div id = "base"><div id = "blockBase"></div></div>
+		<div id = "time"></div>
+		<div id = "score"></div>
+		<div id = "trick"></div>
+		<div id = "trickGoal"></div>
+		<div id = "lineInform"></div>
+		<div id = "info"><div id = "infoTitle"></div><div id = "infoBody"></div></div>
+        
+        <script src = "Control.js"></script>
+        <script src = "Block.js"></script>
+        <script src = "Monoiamond.js"></script>
+        <script src = "Pentiamond.js"></script>
+        <script src = "Play.js"></script>
+        <script src = "Trick.js"></script>
+        <script src = "MondPanel.js"></script>
+        <script src = "TrickPanel.js"></script>
+        
+        <script>
+            
+            let c = new Control;
+            c.setElement();
+            c.setSize();
+            c.paintAll();
+			c.setPage(0);
+            
+            let p = new Play(c);
+            
+            document.addEventListener("keydown", keyDownEvent);
+            
+            function keyDownEvent(e) {
+                
+                switch(e.code){
+                
+                    case "ArrowRight":
+                        
+                        p.moveRight();
+                        break;
+                    
+                    case "ArrowLeft":
+                        
+                        p.moveLeft();
+                        break;
+                        
+                    case "ArrowUp":
+                        
+                        p.put();
+                        break;
+                        
+                    case "ArrowDown":
+                        
+                        p.fall();
+                        break;
+                        
+                    case "KeyV":
+                        
+                        p.spinRight();
+                        break;
+                        
+                    case "KeyC":
+                        
+                        p.spinLeft();
+                        break;
+                        
+                    case "KeyS":
+                        
+						p.start();
+                        break;
+						
+                    case "KeyR":
+                        
+						p.reset();
+                        break;
+						
+                    case "KeyP":
+                        
+						if(p.pausing){
+							
+							p.reopening();
+							
+						}else{
+							
+							p.pause();
+							
+						}
+						
+						break;
+                        
+                    case "Space":
+                        
+						p.hold();
+                        break;
+						
+                    case "Enter":
+                        
+						p.removeLine();
+                        break;
+                        
+                }
+                                
+            }
+			
+			document.getElementById("mode0").onclick = function(){p.mode = 0; p.start();};
+			document.getElementById("help").onclick = function(){c.setPage(1);};
+			document.getElementById("modeSelect").onclick = function(){c.setPage(2);};
+			document.getElementById("mode1").onclick = function(){p.mode = 1; p.start();};
+			document.getElementById("mode2").onclick = function(){p.mode = 2; p.start();};
+			document.getElementById("mode3").onclick = function(){p.mode = 3; p.start();};
+			document.getElementById("reset").onclick = function(){p.reset();};
+			document.getElementById("howToPlay").onclick = function(){c.setPage(3);};
+			document.getElementById("howToOperate").onclick = function(){c.setPage(4);};
+			document.getElementById("trickList").onclick = function(){c.setPage(5);};
+			document.getElementById("next").onclick = function(){c.nextTrick();};
+			document.getElementById("prev").onclick = function(){c.prevTrick();};
+			
+			document.getElementById("return0").onclick = function(){c.setPage(0);};
+			document.getElementById("return1").onclick = function(){c.setPage(1);};
+			
+			document.getElementById("reopening").onclick = function(){p.reopening();};
+			document.getElementById("retry").onclick = function(){let mode = p.mode; p.reset(); p.mode = mode; p.start()};
+			document.getElementById("returnToTop").onclick = function(){p.reset();};
+            
+        </script>
+        
+    </body>
+    
+</html>

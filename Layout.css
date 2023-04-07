@@ -1,0 +1,123 @@
+*{
+    
+    padding : 0px;
+    margin : 0px;
+    position : absolute;
+    
+}
+
+.block{
+    
+    background-color : black;
+	
+}
+
+.button{
+	
+	background-color : lightGray;
+	border : 2px solid;
+	border-color : white;
+	border-radius : 4px;
+	
+}
+
+.button:hover{
+	
+	background : blue;
+	
+}
+
+.button:active{
+	
+	background-color : #000088;
+	border-color : lightGray;
+	
+}
+
+.returnButton{
+	
+	background-color : #884444;
+	border : 2px solid;
+	border-color : white;
+	border-radius : 4px;
+	
+}
+
+.returnButton:hover{
+	
+	background-color : #aa44aa;
+	
+}
+
+.returnButton:active{
+	
+	background-color : #552255;
+	border-color : lightGray;
+	
+}
+
+.mondPanel{
+	
+    background-color : brown;
+	border : 4px solid black;
+	border-radius : 8px;
+	
+}
+
+#base{
+    
+    background-color : brown;
+	border : 4px solid black;
+	border-radius : 8px;
+    left : 5px;
+    
+}
+
+#blockBase{
+    
+    background-color : brown;
+    top : 0px;
+    left : 38px;
+    
+}
+
+#time{
+	
+	width : 300px;
+	
+}
+
+#score{
+	
+	width : 300px;
+	
+}
+
+#lineInform{
+	
+	width : 300px;
+
+}
+
+#trick{
+	
+	width : 1000px;
+	
+}
+
+#trickGoal{
+	
+	width : 1000px;
+	
+}
+
+#info{
+	
+	background-color : #aaaaaa;
+	border : 4px solid;
+	border-color : #666666;
+	border-radius : 8px;
+	z-index : 100;
+	
+}
+    
