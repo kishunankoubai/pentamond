@@ -40,30 +40,61 @@
             
             let p = new Play(c);
             
-            document.addEventListener("keydown", keyDownEvent);
+            //ウインドウサイズに変更があったらすべてのサイズを計算しなおす
+            window.addEventListener("resize", (e) => {c.setSize();});
+           
+            //Keyの処理及びそのリピート
+            let repeatFunction;
+            let repeatTime = 35;
+            let delayTime = 150;
+            let timeoutId;
+            let intervalId;
+            let repeatKey;
             
-            function keyDownEvent(e) {
+            document.addEventListener("keydown", (e) => {
                 
                 switch(e.code){
                 
                     case "ArrowRight":
-                        
-                        p.moveRight();
+                        if(!e.repeat){
+                            clearInterval(intervalId);
+                            clearTimeout(timeoutId);
+                            p.moveRight();
+                            repeatKey = e.code;
+                            repeatFunction = () => {p.moveRight()}
+                            timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
+                        }
                         break;
                     
                     case "ArrowLeft":
-                        
-                        p.moveLeft();
+                        if(!e.repeat){
+                            clearInterval(intervalId);
+                            clearTimeout(timeoutId);
+                            p.moveLeft();
+                            repeatKey = e.code;
+                            repeatFunction = () => {p.moveLeft()}
+                            timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
+                        }
                         break;
                         
                     case "ArrowUp":
                         
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        repeatFunction = undefined;
                         p.put();
                         break;
                         
                     case "ArrowDown":
                         
-                        p.fall();
+                        if(!e.repeat){
+                            clearInterval(intervalId);
+                            clearTimeout(timeoutId);
+                            p.fall();
+                            repeatKey = e.code;
+                            repeatFunction = () => {p.fall()}
+                            timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
+                        }
                         break;
                         
                     case "KeyV":
@@ -78,42 +109,315 @@
                         
                     case "KeyS":
                         
-				p.start();
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        repeatFunction = undefined;
+						p.start();
                         break;
 						
                     case "KeyR":
                         
-				p.reset();
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        repeatFunction = undefined;
+						p.reset();
                         break;
 						
                     case "KeyP":
-                        
-				if(p.pausing){
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        repeatFunction = undefined;
+						if(p.pausing){
 							
-					p.reopening();
+							p.reopening();
 							
-					}else{
+						}else{
 							
-						p.pause();
+							p.pause();
 							
-					}
+						}
 						
-				break;
+						break;
+
+                    case "KeyA":
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        repeatFunction = undefined;
+                        p.pause();
+                        let mode = p.mode;
+                        p.reset();
+                        p.mode = mode;
+                        p.start();
                         
                     case "Space":
-                        
-				p.hold();
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        repeatFunction = undefined;
+						p.hold();
                         break;
 						
                     case "Enter":
                         
-				p.removeLine();
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        repeatFunction = undefined;
+						p.removeLine();
                         break;
                         
                 }
                                 
+            });
+
+            document.addEventListener("keyup", (e) => {
+                
+                switch(e.code){
+                
+                case "ArrowRight":
+                    if(repeatKey == e.code){
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        repeatFunction = undefined;
+                    }
+                    break;
+                
+                case "ArrowLeft":
+                    if(repeatKey == e.code){
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        repeatFunction = undefined;
+                    }
+                    break;
+                    
+                case "ArrowUp":
+                    break;
+                    
+                case "ArrowDown":
+                    if(repeatKey == e.code){
+                        clearInterval(intervalId);
+                        clearTimeout(timeoutId);
+                        repeatFunction = undefined;
+                    }
+                    break;
+                    
+                case "KeyV":
+                    
+                    break;
+                    
+                case "KeyC":
+                    
+                    break;
+                    
+                case "KeyS":
+                    
+                    break;
+                    
+                case "KeyR":
+                    
+                    break;
+                    
+                case "KeyP":
+                    
+                    break;
+
+                case "KeyA":
+                    
+                case "Space":
+                    break;
+                    
+                case "Enter":
+                    break;
+                    
             }
+                            
+
+                                                
+            });
 			
+            let af;
+            window.addEventListener("gamepadconnected", (e) => {
+                af = window.requestAnimationFrame(gamepadLoop);
+                console.log("gamepad connected");
+            });
+            window.addEventListener("gamepaddisconnected", (e) => {
+                window.cancelAnimationFrame(af);
+                console.log("gamepad disconnected");
+            });
+
+            //コントローラーの接続時の処理
+            let num1 = 18
+            let num2 = 2
+            let sensitivity = 0.8;
+            let pressedButtons = [...Array(num1)].map((i, j) => j).map(() => (false));
+            let axes = [...Array(num2)].map((i, j) => j).map(() => (false))
+
+            function gamepadLoop(){
+                let gp = navigator.getGamepads()[0];
+
+                if(!gp){
+                    return;
+                }
+
+                for(i = 0; i < num1; i++){
+
+                    if(pressedButtons[i] != gp.buttons[i].pressed){
+                        if(gp.buttons[i].pressed){
+                            //ここはkeydownとほぼ同様の挙動をする
+                            console.log("button" + i);
+
+                            if(i == 0){
+                                p.spinLeft();
+                            }
+
+                            if(i == 1){
+                                p.spinRight();
+                            }
+
+                            if(i == 3){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                repeatFunction = undefined;
+                                p.removeLine();
+                            }
+
+                            if(i == 7){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                repeatFunction = undefined;
+                                p.put();
+                            }
+                            if(i == 2){
+                                p.hold();
+                            }
+                            if(i == 9){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                repeatFunction = undefined;
+                                if(p.pausing){
+                                    
+                                    p.reopening();
+                                    
+                                }else{
+                                    
+                                    p.pause();
+                                    
+                                }
+                            }
+                            if(i == 13){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                p.fall();
+                                //repeatKey = e.code;                                
+                                repeatFunction = () => {p.fall();}
+                                timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
+                            }
+                            if(i == 14){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                p.moveLeft();
+                                //repeatKey = e.code;
+                                repeatFunction = () => {p.moveLeft()}
+                                timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
+                            }
+                            if(i == 15){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                p.moveRight();
+                                //repeatKey = e.code;
+                                repeatFunction = () => {p.moveRight()}
+                                timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
+                            }
+
+                        }else{
+                            //ここはkeyupと同様の挙動をする
+
+                            if(i == 13){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                repeatFunction = undefined;
+                                pressedButtons = [...Array(num1)].map((i, j) => j).map(() => (false))
+                            }
+                            if(i == 14){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                repeatFunction = undefined;
+                                pressedButtons = [...Array(num1)].map((i, j) => j).map(() => (false))
+                            }
+                            if(i == 15){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                repeatFunction = undefined;
+                                pressedButtons = [...Array(num1)].map((i, j) => j).map(() => (false));
+                            }
+                        }
+
+                    }
+
+                }
+                for(i = 0; i < num2; i++){
+
+                    if(Math.abs(axes[i]) < sensitivity && Math.abs(gp.axes[i]) >= sensitivity){
+                        if(gp.axes[i] > 0){
+                            if(i == 0){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                p.moveRight();
+                                //repeatKey = e.code;                                
+                                repeatFunction = () => {p.moveRight()}
+                                timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
+                            }
+                            if(i == 1){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                p.fall();
+                                //repeatKey = e.code;                                
+                                repeatFunction = () => {p.fall();}
+                                timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
+                            }
+
+                        }else{
+                            if(i == 0){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                p.moveLeft();
+                                //repeatKey = e.code;
+                                repeatFunction = () => {p.moveLeft()}
+                                timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
+
+                            }
+
+                        }
+                    }
+                    if(Math.abs(axes[i]) >= sensitivity && Math.abs(gp.axes[i]) < sensitivity){
+                        if(gp.axes[i] > 0){
+                            if(i == 0){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                repeatFunction = undefined;
+                            }
+                            if(i == 1){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                repeatFunction = undefined;
+                            }
+
+                        }else{
+                            if(i == 0){
+                                clearInterval(intervalId);
+                                clearTimeout(timeoutId);
+                                repeatFunction = undefined;
+                            }
+                            
+                        }
+                    }
+                }
+                pressedButtons = [...Array(num1)].map((i, j) => j).map((e) => (gp.buttons[e].pressed));
+                axes = [...Array(num2)].map((i, j) => j).map((e) => (gp.axes[e]));
+                if(gp.buttons[0].pressed){
+                    
+                }
+                af = window.requestAnimationFrame(gamepadLoop);
+            }
+
 			document.getElementById("mode0").onclick = function(){p.mode = 0; p.start();};
 			document.getElementById("help").onclick = function(){c.setPage(1);};
 			document.getElementById("modeSelect").onclick = function(){c.setPage(2);};
@@ -131,7 +435,7 @@
 			document.getElementById("return1").onclick = function(){c.setPage(1);};
 			
 			document.getElementById("reopening").onclick = function(){p.reopening();};
-			document.getElementById("retry").onclick = function(){let mode = p.mode; p.reset(); p.mode = mode; p.start()};
+			document.getElementById("retry").onclick = function(){let mode = p.mode; p.reset(); p.mode = mode; p.start();};
 			document.getElementById("returnToTop").onclick = function(){p.reset();};
             
         </script>

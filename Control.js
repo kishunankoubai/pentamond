@@ -3,7 +3,10 @@ class Control{
     height = 20;
     width = 9;
     hHeight = 16;
-    gridH = (window.innerHeight) / (this.height + 1);
+	leftPadding = 2;
+	bottomPadding = 1;
+	infoWidth = 16;
+    gridH = (window.innerHeight) / (this.height + this.bottomPadding + 1);
     gridW = Math.floor(this.gridH * 2 / Math.sqrt(3));
     initialX = this.width - 1;
     initialY = this.hHeight + 1;
@@ -28,6 +31,8 @@ class Control{
     }
 
     setElement(){
+
+		let base = document.getElementById("base");
         
         let blockBase = document.getElementById("blockBase");
         this.block = new Array(this.width);
@@ -41,8 +46,6 @@ class Control{
                 let block = document.createElement("canvas");
                 block.className = "block";
                 block.id = "b" + (i + this.width * j);
-                block.style.top = ((j - this.hHeight) * this.gridH) + "px";
-                block.style.left = (i * this.gridW) + "px";
                 blockBase.appendChild(block);
                 this.block[i][j] = new Block("b" + (i + this.width * j));
                 
@@ -55,18 +58,10 @@ class Control{
         let holdPanel = document.createElement("div");
         holdPanel.id = "hp";
 		holdPanel.className = "mondPanel";
-		holdPanel.style.width = ((this.gridW * this.holdSize) * 4) + "px";
-		holdPanel.style.height = ((this.gridH * this.holdSize) * 4) + "px";
-		holdPanel.style.top = 0 + "px";
-		holdPanel.style.left = (this.gridW * (this.width + 2) + 11) + "px";
 		document.getElementsByTagName("body")[0].insertBefore(holdPanel, document.getElementById("info").nextSibling);
 			
 		let holdBase = document.createElement("div");
 		holdBase.id = "hb";
-		holdBase.style.width = ((this.gridW * this.holdSize) * 3) + "px";
-		holdBase.style.height = ((this.gridH * this.holdSize) * 3) + "px";
-		holdBase.style.top = (this.gridH * this.holdSize / 2) + "px";
-		holdBase.style.left = (this.gridW * this.holdSize / 2) + "px";
 		holdPanel.appendChild(holdBase);
 			
 		for(let j = 0; j < 3; j++){
@@ -76,10 +71,6 @@ class Control{
 				let block = document.createElement("canvas");
 				block.className = "block";
 				block.id = "hp" + "b" + (j + 3 * k);
-				block.style.width = (this.gridW * this.holdSize) + "px";
-				block.style.height = (this.gridH * this.holdSize) + "px";
-				block.style.top = (k * this.gridH * this.holdSize - k * 0.1) + "px";
-				block.style.left = (j * this.gridW * this.holdSize) + "px";
 				holdBase.appendChild(block);
 					
 			}
@@ -95,18 +86,11 @@ class Control{
             let nextPanel = document.createElement("div");
 			nextPanel.id = "np" + i;
 			nextPanel.className = "mondPanel";
-			nextPanel.style.width = ((this.gridW * this.nextSize) * 4) + "px";
-			nextPanel.style.height = ((this.gridH * this.nextSize) * 4) + "px";
-			nextPanel.style.top = (this.gridH * this.nextSize * 4 * i + this.gridH * this.holdSize * 4 + 4 + i * 3) + "px";
-			nextPanel.style.left = (this.gridW * (this.width + 2) + 11) + "px";
             document.getElementsByTagName("body")[0].insertBefore(nextPanel, document.getElementById("info").nextSibling);
 			
 			let nextBase = document.createElement("div");
 			nextBase.id = "nb" + i;
-			nextBase.style.width = ((this.gridW * this.nextSize) * 3) + "px";
-			nextBase.style.height = ((this.gridH * this.nextSize) * 3) + "px";
-			nextBase.style.top = (this.gridH * this.nextSize / 2) + "px";
-			nextBase.style.left = (this.gridW * this.nextSize / 2) + "px";
+
 			nextPanel.appendChild(nextBase);
 			
 			for(let j = 0; j < 3; j++){
@@ -116,10 +100,6 @@ class Control{
 					let block = document.createElement("canvas");
 					block.className = "block";
 					block.id = "np" + i + "b" + (j + 3 * k);
-					block.style.width = (this.gridW * this.nextSize) + "px";
-					block.style.height = (this.gridH * this.nextSize) + "px";
-					block.style.top = (k * this.gridH * this.nextSize - k * 0.1) + "px";
-					block.style.left = (j * this.gridW * this.nextSize) + "px";
 					nextBase.appendChild(block);
 					
 				}
@@ -133,18 +113,10 @@ class Control{
         let trickPanel = document.createElement("div");
         trickPanel.id = "tp1";
 		trickPanel.className = "mondPanel";
-		trickPanel.style.width = ((this.gridW) * 10) + "px";
-		trickPanel.style.height = ((this.gridH) * 2) + "px";
-		trickPanel.style.top = (this.gridH * (this.height - 8)) + "px";
-		trickPanel.style.left = (this.gridW * (this.width + 8)) + "px";
 		document.getElementsByTagName("body")[0].insertBefore(trickPanel, document.getElementById("info").nextSibling);
 			
 		let trickBase = document.createElement("div");
 		trickBase.id = "tb1";
-		trickBase.style.width = ((this.gridW ) * 9) + "px";
-		trickBase.style.height = ((this.gridH) * 1) + "px";
-		trickBase.style.top = (this.gridH  / 2) + "px";
-		trickBase.style.left = (this.gridW / 2) + "px";
 		trickPanel.appendChild(trickBase);
 			
 		for(let j = 0; j < 9; j++){
@@ -152,10 +124,6 @@ class Control{
 			let block = document.createElement("canvas");
 			block.className = "block";
 			block.id = "tp1" + "b" + (j);
-			block.style.width = (this.gridW) + "px";
-			block.style.height = (this.gridH) + "px";
-			block.style.top = 0 + "px";
-			block.style.left = (j * this.gridW) + "px";
 			trickBase.appendChild(block);
 							
 		}
@@ -165,18 +133,10 @@ class Control{
         trickPanel = document.createElement("div");
         trickPanel.id = "tp2";
 		trickPanel.className = "mondPanel";
-		trickPanel.style.width = ((this.gridW) * 10) + "px";
-		trickPanel.style.height = ((this.gridH) * 2) + "px";
-		trickPanel.style.top = (this.gridH * (5)) + "px";
-		trickPanel.style.left = (this.gridW * (4)) + "px";
 		info.appendChild(trickPanel);
 			
 		trickBase = document.createElement("div");
 		trickBase.id = "tb2";
-		trickBase.style.width = ((this.gridW ) * 9) + "px";
-		trickBase.style.height = ((this.gridH) * 1) + "px";
-		trickBase.style.top = (this.gridH  / 2) + "px";
-		trickBase.style.left = (this.gridW / 2) + "px";
 		trickPanel.appendChild(trickBase);
 			
 		for(let j = 0; j < 9; j++){
@@ -184,10 +144,6 @@ class Control{
 			let block = document.createElement("canvas");
 			block.className = "block";
 			block.id = "tp2" + "b" + (j);
-			block.style.width = (this.gridW) + "px";
-			block.style.height = (this.gridH) + "px";
-			block.style.top = 0 + "px";
-			block.style.left = (j * this.gridW) + "px";
 			trickBase.appendChild(block);
 							
 		}
@@ -200,7 +156,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "Start";
-		button.style.top = (this.gridH * 5) + "px";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -208,7 +163,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "ヘルプ";
-		button.style.top = (this.gridH * 9) + "px";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -216,7 +170,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "モード選択";
-		button.style.top = (this.gridH * 13) + "px";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -224,7 +177,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "遊び方";
-		button.style.top = (this.gridH * 5) + "px";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -232,7 +184,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "操作方法";
-		button.style.top = (this.gridH * 9) + "px";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -240,7 +191,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "役一覧";
-		button.style.top = (this.gridH * 13) + "px";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -248,7 +198,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "次へ";
-		button.style.top = (this.gridH * 13) + "px";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -256,7 +205,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "前へ";
-		button.style.top = (this.gridH * 13) + "px";
         info.appendChild(button);
 
 		
@@ -265,7 +213,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "二十列揃え";
-		button.style.top = (this.gridH * 5) + "px";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -273,7 +220,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "二万点チャレンジ";
-		button.style.top = (this.gridH * 9) + "px";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -281,7 +227,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "役チャレンジ";
-		button.style.top = (this.gridH * 13) + "px";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -289,8 +234,7 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "Reset";
-		button.style.top = (this.gridH * (this.height - 2)) + "px";
-		button.style.borderColor = "black"
+		//button.style.borderColor = "black"
         document.getElementsByTagName("body")[0].insertBefore(button, document.getElementById("info").nextSibling);		
 		
         button = document.createElement("button");
@@ -319,7 +263,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "再開する";
-		button.style.top = (this.gridH * 5) + "px";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -327,7 +270,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "やり直す";
-		button.style.top = (this.gridH * 9) + "px";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -335,7 +277,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "トップ画面へ";
-		button.style.top = (this.gridH * 13) + "px";
         info.appendChild(button);
 		
 		this.setButtonTra();
@@ -522,11 +463,13 @@ class Control{
 
     setSize(){
 		
-	    this.gridH = this.gridW * Math.sqrt(3) / 2;
+		this.gridH = (window.innerHeight) / (this.height + this.bottomPadding + 1);
+		this.gridW = Math.floor(this.gridH * 2 / Math.sqrt(3));
         
         let base = document.getElementById("base");
         base.style.width = (this.gridW * (this.width + 2)) + "px";
         base.style.height = (this.gridH * (this.height + 1)) + "px";
+		base.style.left = (this.gridW * (this.leftPadding) + 6) + "px"
         base.style.top = (-this.gridH / 2) + "px";
         
         let blockBase = document.getElementById("blockBase");
@@ -547,52 +490,153 @@ class Control{
             }
                 
         }
+
+		let holdPanel = document.getElementById("hp");
+		holdPanel.style.width = ((this.gridW * this.holdSize) * 4) + "px";
+		holdPanel.style.height = ((this.gridH * this.holdSize) * 4) + "px";
+		holdPanel.style.top = 0 + "px";
+		holdPanel.style.left = (this.gridW * (this.width + 2 + this.leftPadding) + 11) + "px";
+
+		let holdBase = document.getElementById("hb");
+		holdBase.style.width = ((this.gridW * this.holdSize) * 3) + "px";
+		holdBase.style.height = ((this.gridH * this.holdSize) * 3) + "px";
+		holdBase.style.top = (this.gridH * this.holdSize / 2) + "px";
+		holdBase.style.left = (this.gridW * this.holdSize / 2) + "px";
+			
+		for(let j = 0; j < 3; j++){
+				
+			for(let k = 0; k < 3; k++){
+					
+				let block = document.getElementById("hp" + "b" + (j + 3 * k));
+				block.style.width = (this.gridW * this.holdSize) + "px";
+				block.style.height = (this.gridH * this.holdSize) + "px";
+				block.style.top = (k * this.gridH * this.holdSize - k * 0.1) + "px";
+				block.style.left = (j * this.gridW * this.holdSize) + "px";
+					
+			}
+				
+		}
+
+
+		for(let i = 0; i < this.next; i++){
+			
+            let nextPanel = document.getElementById("np" + i);
+			nextPanel.style.width = ((this.gridW * this.nextSize) * 4) + "px";
+			nextPanel.style.height = ((this.gridH * this.nextSize) * 4) + "px";
+			nextPanel.style.top = (this.gridH * this.nextSize * 4 * i + this.gridH * (this.holdSize * 4 + 3) + 4 + i * 3) + "px";
+			nextPanel.style.left = (this.gridW * (this.width + 2 + this.leftPadding) + 11) + "px";
+			
+			let nextBase = document.getElementById("nb" + i);
+			nextBase.style.width = ((this.gridW * this.nextSize) * 3) + "px";
+			nextBase.style.height = ((this.gridH * this.nextSize) * 3) + "px";
+			nextBase.style.top = (this.gridH * this.nextSize / 2) + "px";
+			nextBase.style.left = (this.gridW * this.nextSize / 2) + "px";
+			
+			for(let j = 0; j < 3; j++){
+				
+				for(let k = 0; k < 3; k++){
+					
+					let block = document.getElementById("np" + i + "b" + (j + 3 * k));
+					block.style.width = (this.gridW * this.nextSize) + "px";
+					block.style.height = (this.gridH * this.nextSize) + "px";
+					block.style.top = (k * this.gridH * this.nextSize - k * 0.1) + "px";
+					block.style.left = (j * this.gridW * this.nextSize) + "px";
+					
+				}
+				
+			}
+						
+		}
+
+		let trickPanel = document.getElementById("tp1");
+		trickPanel.style.width = ((this.gridW) * 10) + "px";
+		trickPanel.style.height = ((this.gridH) * 2) + "px";
+		trickPanel.style.top = (this.gridH * (this.height - 8)) + "px";
+		trickPanel.style.left = (this.gridW * (this.width + this.leftPadding + 8)) + "px";
+			
+		let trickBase = document.getElementById("tb1");
+		trickBase.style.width = ((this.gridW ) * 9) + "px";
+		trickBase.style.height = ((this.gridH) * 1) + "px";
+		trickBase.style.top = (this.gridH  / 2) + "px";
+		trickBase.style.left = (this.gridW / 2) + "px";
+			
+		for(let j = 0; j < 9; j++){
+									
+			let block = document.getElementById("tp1" + "b" + (j));
+			block.style.width = (this.gridW) + "px";
+			block.style.height = (this.gridH) + "px";
+			block.style.top = 0 + "px";
+			block.style.left = (j * this.gridW) + "px";
+							
+		}
+				
+        trickPanel = document.getElementById("tp2");
+		trickPanel.style.width = ((this.gridW) * 10) + "px";
+		trickPanel.style.height = ((this.gridH) * 2) + "px";
+		trickPanel.style.top = (this.gridH * (5)) + "px";
+		trickPanel.style.left = (this.gridW * (this.infoWidth / 2 - 5)) + "px";
+			
+		trickBase = document.getElementById("tb2");
+		trickBase.style.width = ((this.gridW ) * 9) + "px";
+		trickBase.style.height = ((this.gridH) * 1) + "px";
+		trickBase.style.top = (this.gridH  / 2) + "px";
+		trickBase.style.left = (this.gridW / 2) + "px";
+			
+		for(let j = 0; j < 9; j++){
+									
+			let block = document.getElementById("tp2" + "b" + (j));
+			block.style.width = (this.gridW) + "px";
+			block.style.height = (this.gridH) + "px";
+			block.style.top = 0 + "px";
+			block.style.left = (j * this.gridW) + "px";
+							
+		}
 		
 		let time = document.getElementById("time");
-		time.style.width = (this.gridW * (this.width * 2 - 4)) + "px";
+		time.style.width = (this.gridW * (this.infoWidth / 2 + 1)) + "px";
 		time.style.top = (this.gridH * 2) + "px";
-		time.style.left = (this.gridW * (this.width + 8)) + "px";
+		time.style.left = (this.gridW * (this.width + this.leftPadding + 8)) + "px";
 		time.style.fontSize = (30 * this.gridW / 30) + "px";
 		
 		let score = document.getElementById("score");
-		score.style.width = (this.gridW * (this.width * 2 - 4)) + "px";
-		score.style.top = (this.gridH * (this.height - 2)) + "px";
-		score.style.left = (this.gridW * (this.width + 3)) + "px";
+		score.style.width = (this.gridW * (this.infoWidth / 2 + 1)) + "px";
+		score.style.top = (this.gridH * (this.height - 4)) + "px";
+		score.style.left = (this.gridW * (this.width + this.leftPadding + 8)) + "px";
 		score.style.fontSize = (30 * this.gridW / 30) + "px";
 		
 		let lineInform = document.getElementById("lineInform");
-		lineInform.style.width = (this.gridW * (this.width * 2 - 4)) + "px";
-		lineInform.style.top = (this.gridH * (this.height - 4)) + "px";
-		lineInform.style.left = (this.gridW * (this.width + 3)) + "px";
+		lineInform.style.width = (this.gridW * (this.infoWidth / 2 + 1)) + "px";
+		lineInform.style.top = (this.gridH * (this.height - 6)) + "px";
+		lineInform.style.left = (this.gridW * (this.width + this.leftPadding + 8)) + "px";
 		lineInform.style.fontSize = (30 * this.gridW / 30) + "px";
 		
 		let trick = document.getElementById("trick");
-		trick.style.width = (this.gridW * (this.width * 2 - 4)) + "px";
+		trick.style.width = (this.gridW * (this.infoWidth / 2 + 4)) + "px";
 		trick.style.top = (this.gridH * 6) + "px";
-		trick.style.left = (this.gridW * (this.width + 8)) + "px";
+		trick.style.left = (this.gridW * (this.width + this.leftPadding + 8)) + "px";
 		trick.style.fontSize = (30 * this.gridW / 30) + "px";
 		
 		let trickGoal = document.getElementById("trickGoal");
-		trickGoal.style.width = (this.gridW * (this.width * 2 - 4)) + "px";
+		trickGoal.style.width = (this.gridW * (this.infoWidth / 2 + 5)) + "px";
 		trickGoal.style.top = (this.gridH * 8) + "px";
-		trickGoal.style.left = (this.gridW * (this.width + 8)) + "px";
+		trickGoal.style.left = (this.gridW * (this.width + this.leftPadding + 8)) + "px";
 		trickGoal.style.fontSize = (30 * this.gridW / 30) + "px";
 		
 		let info = document.getElementById("info");
-		info.style.width = (this.gridW * (this.width * 2)) + "px";
+		info.style.width = (this.gridW * (this.infoWidth)) + "px";
 		info.style.height = (this.gridH * (this.height - 1)) + "px";
 		info.style.top = this.gridW + "px";
 		info.style.left = (this.gridW * (this.width + 4)) + "px";
 		
 		let infoTitle = document.getElementById("infoTitle");
-		infoTitle.style.width = (this.gridW * (this.width * 2)) + "px";
+		infoTitle.style.width = (this.gridW * (this.infoWidth)) + "px";
 		infoTitle.style.height = "0px";
 		infoTitle.style.top = this.gridH * 2 + "px";
 		infoTitle.style.left = (this.gridW * 2) + "px";
 		infoTitle.style.fontSize = (35 * this.gridW / 30) + "px";
 		
 		let infoBody = document.getElementById("infoBody");
-		infoBody.style.width = (this.gridW * (this.width * 2 - 4)) + "px";
+		infoBody.style.width = (this.gridW * (this.infoWidth - 4)) + "px";
 		infoBody.style.height = (this.gridH * (this.height - 7)) + "px";
 		infoBody.style.top = this.gridH * 6 + "px";
 		infoBody.style.left = (this.gridW * 2) + "px";
@@ -603,7 +647,7 @@ class Control{
 			
 			b.style.width = (this.gridW * 6) + "px";
 		    b.style.height = (this.gridH * 2) + "px";
-			b.style.left = (this.gridW * (this.width - 3)) + "px";
+			b.style.left = (this.gridW * (this.infoWidth / 2 - 3)) + "px";
 			b.style.fontSize = (20 * this.gridW / 30) + "px";
 			
 		}
@@ -613,21 +657,66 @@ class Control{
 			
 			b.style.width = (this.gridW * 3) + "px";
 		    b.style.height = (this.gridH * 1) + "px";
-			b.style.left = (this.gridW * (this.width * 2 - 5)) + "px";
-			b.style.top = (this.gridH * (this.height - 4)) + "px";
+			b.style.left = (this.gridW * (this.infoWidth - 4)) + "px";
+			b.style.top = (this.gridH * (this.height - 3)) + "px";
 			b.style.fontSize = (15 * this.gridW / 30) + "px";
 			
 		}
+
+		button = document.getElementById("mode0");
+		button.style.top = (this.gridH * 5) + "px";
 		
-        document.getElementById("reset").style.left = (this.gridW * (this.width + 14)) + "px";
+        button = document.getElementById("help");
+		button.style.top = (this.gridH * 9) + "px";
+		
+        button = document.getElementById("modeSelect");
+		button.style.top = (this.gridH * 13) + "px";
+		
+        button = document.getElementById("howToPlay");
+		button.style.top = (this.gridH * 5) + "px";
+		
+        button = document.getElementById("howToOperate");
+		button.style.top = (this.gridH * 9) + "px";
+		
+        button = document.getElementById("trickList");
+		button.style.top = (this.gridH * 13) + "px";
+		
+        button = document.getElementById("next");
+		button.style.top = (this.gridH * 13) + "px";
+		
+        button = document.getElementById("prev");
+		button.style.top = (this.gridH * 13) + "px";
+		
+        button = document.getElementById("mode1");
+		button.style.top = (this.gridH * 5) + "px";
+		
+        button = document.getElementById("mode2");
+		button.style.top = (this.gridH * 9) + "px";
+		
+        button = document.getElementById("mode3");
+		button.style.top = (this.gridH * 13) + "px";
+		
+        button = document.getElementById("reset");
+		button.style.top = (this.gridH * (this.height - 2)) + "px";
+		button.style.left = (this.gridW * (this.width + this.leftPadding + 8)) + "px";
+				
+        button = document.getElementById("reopening");
+		button.style.top = (this.gridH * 5) + "px";
+		
+        button = document.getElementById("retry");
+		button.style.top = (this.gridH * 9) + "px";
+		
+        button = document.getElementById("returnToTop");
+		button.style.top = (this.gridH * 13) + "px";
+
 		
 		let next = document.getElementById("next");
-		next.style.left = (this.gridW * 12) + "px";
+		next.style.left = (this.gridW * ((this.infoWidth - this.infoWidth / 5) - 3)) + "px";
 		next.style.width = (this.gridW * 3) + "px";
 		next.style.height = (this.gridW * 1) + "px";
 		
 		let prev = document.getElementById("prev");
-		prev.style.left = (this.gridW * 3) + "px";
+		prev.style.left = (this.gridW * (this.infoWidth / 5)) + "px";
 		prev.style.width = (this.gridW * 3) + "px";
 		prev.style.height = (this.gridW * 1) + "px";
 		
@@ -635,17 +724,7 @@ class Control{
 
     removeLine(){
 		
-		let result = [
-			this.block[0][this.height + this.hHeight - 1].getShape(),	 
-			this.block[1][this.height + this.hHeight - 1].getShape(),	 
-			this.block[2][this.height + this.hHeight - 1].getShape(),	 
-			this.block[3][this.height + this.hHeight - 1].getShape(),	 
-			this.block[4][this.height + this.hHeight - 1].getShape(),	 
-			this.block[5][this.height + this.hHeight - 1].getShape(),	 
-			this.block[6][this.height + this.hHeight - 1].getShape(),	 
-			this.block[7][this.height + this.hHeight - 1].getShape(),	 
-			this.block[8][this.height + this.hHeight - 1].getShape(),	 					 
-		];
+		let result = [...Array(this.width)].map((i, j) => j).map((i) => (this.block[i][this.height + this.hHeight - 1].getShape()), this);
 		
 		for(let i = this.height + this.hHeight - 1; i >= 0; i--){
 			
