@@ -2,6 +2,7 @@ class Play{
 	
 	c = null;
     pm = null;
+	prevPm = null;
 
     initialTime = 300;
     time1 = 0;
@@ -12,6 +13,7 @@ class Play{
     penaltyCount = 0;
     score = 0;
     chain = 0;
+	prev = 0;
     next = [1, 2, 3, 4, 5, 6];
     next2 = [1, 2, 3, 4, 5, 6];
     nextCount = 0;
@@ -31,7 +33,7 @@ class Play{
 		
 		this.c = c;
 		this.initialTime = c.initialTime;
-		this.pm = new Pentiamond(1);
+		this.pm = new Pentiamond(this.c);
 		this.pm.setInvalidate(true);
 		this.trick = new Trick();
 		this.trickGoal = new Trick();
@@ -92,6 +94,8 @@ class Play{
 			this.next[b] = c;
 
         }
+
+		this.mix();
 		
 		this.newMond();
 		
@@ -110,6 +114,7 @@ class Play{
 		this.penaltyCount = 0;
 		this.score = 0;
 		this.chain = 0;
+		this.prev = 0;
 		this.next = [1, 2, 3, 4, 5, 6];
 		this.next2 = [1, 2, 3, 4, 5, 6];
 		this.nextCount = 0;
@@ -119,9 +124,10 @@ class Play{
 		this.mode = 0;
 		this.finish = false;
 		this.pausing = false;
+		this.prevPm = null;
 		
 		this.pm.remove();
-		this.pm = new Pentiamond(1);
+		this.pm = new Pentiamond(this.c);
 		this.pm.setInvalidate(true);
 		this.createGhost();
         this.c.setPage(0);
@@ -142,6 +148,7 @@ class Play{
 		
 		this.pm = new Pentiamond(this.c);
 		this.pm.setKind(this.shiftNext());
+		//this.pm.setKind(6);
 		this.pm.initialize();
 		this.pm.display();
 		this.createGhost();
@@ -177,6 +184,9 @@ class Play{
 			
 			this.putCount++;
 			this.scoreUp(10);
+			this.prev = this.pm.kind;
+			this.prevPm = new Pentiamond(this.c);
+			this.prevPm.catch(this.pm.x, this.pm.y, this.pm.dir, this.pm.kind);
 			this.newMond();
 			
 		}
@@ -185,14 +195,14 @@ class Play{
 
     spinRight(){
 		
-		this.pm.spin(1);
+		this.pm.SRS(true);
 		this.createGhost();
 
 	}
 
     spinLeft(){
 		
-		this.pm.spin(-1);
+		this.pm.SRS(false);
 		this.createGhost();
 
 	}
@@ -270,7 +280,7 @@ class Play{
 					
 				    this.c.setLineInformElement(this.lineCount);
 				
-					if(this.lineCount == 20){
+					if(this.lineCount == 15){
 
 						this.c.setTrickElement("Clear!");
 						clearInterval(this.timer2);
@@ -323,6 +333,7 @@ class Play{
 		this.pm.initialize();
 		this.pm.display();
 		this.createGhost();
+		this.prev = 0;
 		
 	}
 
@@ -398,6 +409,26 @@ class Play{
 		
 	}
 
+	unPut(){
+
+		if(this.prev == 0 || this.pm.fixed || this.pm.invalidate){
+			return;
+		}
+
+		this.scoreUp(-10);
+		this.timeChange(-3);
+
+		this.prevPm.remove();
+		this.pm.remove();
+		let prevKind = this.unShiftNext();
+		this.pm = new Pentiamond(this.c);
+		this.pm.setKind(prevKind);
+		this.pm.initialize();
+		this.pm.display();
+		this.createGhost();
+
+	}
+
     createGhost(){
 		
 		this.c.resetGhost();
@@ -454,12 +485,12 @@ class Play{
 		this.next2[2] = this.next2[3];
 		this.next2[3] = this.next2[4];
 		this.next2[4] = this.next2[5];
-		this.next2[5] = buffer;
 		
 		this.nextCount++;
 		
 		if(this.nextCount == 6){
 			
+			this.next2 = [1, 2, 3, 4, 5, 6];
 			this.mix();
 			this.nextCount = 0;
 			
@@ -470,6 +501,47 @@ class Play{
             this.c.nextPanel[i].display(this.next[i]);
 			
 		}
+		
+		return buffer;
+		
+	}
+
+    unShiftNext(){
+
+		if(this.prev == 0){
+			return;
+		}
+		let buffer = this.prev;
+		
+		this.next2[5] = this.next2[4];
+		this.next2[4] = this.next2[3];
+		this.next2[3] = this.next2[2];
+		this.next2[2] = this.next2[1];
+		this.next2[1] = this.next2[0];
+		this.next2[0] = this.next[5];
+		this.next[5] = this.next[4];
+		this.next[4] = this.next[3];
+		this.next[3] = this.next[2];
+		this.next[2] = this.next[1];
+		this.next[1] = this.next[0];
+		this.next[0] = this.pm.kind;
+		
+		this.nextCount--;
+		
+		if(this.nextCount == -1){
+			
+			this.nextCount = 5;
+			
+		}
+		
+		for(let i = 0; i < this.c.next; i++){
+			
+            this.c.nextPanel[i].display(this.next[i]);
+			
+		}
+
+		this.prev = 0;
+		this.prevPm = null;
 		
 		return buffer;
 		

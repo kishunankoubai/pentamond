@@ -16,6 +16,7 @@
 .button{
 	
 	background-color : lightGray;
+	background : linear-gradient(20deg, lightGray 60%, rgb(239, 239, 239) );
 	border : 2px solid;
 	border-color : white;
 	border-radius : 4px;
@@ -62,7 +63,9 @@
 .mondPanel{
 	
     background-color : brown;
-	border : 4px solid black;
+	/* border : 4px solid black; */
+	background : linear-gradient(20deg, brown 60%, #ff7a7a );
+	box-shadow: 0px 0px 4px #444444;
 	border-radius : 8px;
 	
 }
@@ -70,7 +73,9 @@
 #base{
     
     background-color : brown;
-	border : 4px solid black;
+	background : linear-gradient(20deg, brown 60%, #ff7a7a );
+	/* border : 4px solid black; */
+	box-shadow : 0px 0px 4px #444444;
 	border-radius : 8px;
     left : 0px;
     
@@ -87,6 +92,9 @@
 #time{
 	
 	width : 300px;
+	/* border : 2px solid;
+	border-color : black;
+	border-radius : 8px; */
 	
 }
 
@@ -117,6 +125,7 @@
 #info{
 	
 	background-color : #cccccc;
+	background : linear-gradient(20deg, #aaaaaa 20%, #cccccc 60%, #eeeeee);
 	border : 4px solid;
 	border-color : #666666;
 	border-radius : 8px;

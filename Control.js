@@ -31,8 +31,6 @@ class Control{
     }
 
     setElement(){
-
-		let base = document.getElementById("base");
         
         let blockBase = document.getElementById("blockBase");
         this.block = new Array(this.width);
@@ -212,7 +210,7 @@ class Control{
 		button.id = "mode1";
 		button.className = "button";
 		button.type = "button";
-		button.innerText = "二十列揃え";
+		button.innerText = "十五列揃え";
         info.appendChild(button);
 		
         button = document.createElement("button");
@@ -365,11 +363,13 @@ class Control{
 		
 		switch(page){
 				
+			//infoパネルを非表示
 			case -1:
 				
 				this.setHidden("info");
 				break;
 				
+			//初期画面
 			case 0:
 				
 				this.setVisible("info");
@@ -379,6 +379,7 @@ class Control{
 				this.setInfoTitle("Pentamond");
 				break;
 
+			//ヘルプを押した場合
 			case 1:
 				
 				this.setVisible("info");
@@ -389,6 +390,7 @@ class Control{
 				this.setInfoTitle("ヘルプ");
 				break;
 				
+			//モード選択を押した場合
 			case 2:
 				
 				this.setVisible("info");
@@ -399,6 +401,7 @@ class Control{
 				this.setInfoTitle("モード選択");
 				break;
 
+			//ヘルプ、遊び方を押した場合
 			case 3:
 				
 				this.setVisible("info");
@@ -412,7 +415,8 @@ class Control{
 							  +"役が成立しない列消しは残り時間が減ってしまうことがあります<br>"
 							  +"できるだけ多くの役を作りながらハイスコアを目指しましょう</p>");
 				break;
-				
+			
+			//ヘルプ、操作方法を押した場合
 			case 4:
 				
 				this.setVisible("info");
@@ -423,11 +427,13 @@ class Control{
 							   +"↓……下移動・滑り移動<br>"
 							   +"C……左回転<br>"
 							   +"V……右回転<br>"
+							   +"B……一手戻す<br>"
 							   +"Space……ホールド<br>"
 							   +"P……ポーズ<br>"
 							   +"R……トップ画面</p>");
 				break;
 				
+			//ヘルプ、役一覧を押した場合
 			case 5:
 				
 				this.setVisible("info");
@@ -445,6 +451,7 @@ class Control{
 							   +"</p>");
 				break;
 				
+			//ポーズ画面
 			case 6:
 				
 				this.setVisible("info");
@@ -523,7 +530,7 @@ class Control{
             let nextPanel = document.getElementById("np" + i);
 			nextPanel.style.width = ((this.gridW * this.nextSize) * 4) + "px";
 			nextPanel.style.height = ((this.gridH * this.nextSize) * 4) + "px";
-			nextPanel.style.top = (this.gridH * this.nextSize * 4 * i + this.gridH * (this.holdSize * 4 + 3) + 4 + i * 3) + "px";
+			nextPanel.style.top = (this.gridH * this.nextSize * 4 * i + this.gridH * (this.holdSize * 4 + 3) + 4 + i * 8) + "px";
 			nextPanel.style.left = (this.gridW * (this.width + 2 + this.leftPadding) + 11) + "px";
 			
 			let nextBase = document.getElementById("nb" + i);
@@ -611,7 +618,7 @@ class Control{
 		lineInform.style.fontSize = (30 * this.gridW / 30) + "px";
 		
 		let trick = document.getElementById("trick");
-		trick.style.width = (this.gridW * (this.infoWidth / 2 + 4)) + "px";
+		trick.style.width = (this.gridW * (this.infoWidth / 2 + 5)) + "px";
 		trick.style.top = (this.gridH * 6) + "px";
 		trick.style.left = (this.gridW * (this.width + this.leftPadding + 8)) + "px";
 		trick.style.fontSize = (30 * this.gridW / 30) + "px";
@@ -636,7 +643,7 @@ class Control{
 		infoTitle.style.fontSize = (35 * this.gridW / 30) + "px";
 		
 		let infoBody = document.getElementById("infoBody");
-		infoBody.style.width = (this.gridW * (this.infoWidth - 4)) + "px";
+		infoBody.style.width = (this.gridW * (this.infoWidth - 3)) + "px";
 		infoBody.style.height = (this.gridH * (this.height - 7)) + "px";
 		infoBody.style.top = this.gridH * 6 + "px";
 		infoBody.style.left = (this.gridW * 2) + "px";

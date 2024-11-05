@@ -46,157 +46,165 @@
             //Keyの処理及びそのリピート
             let repeatFunction;
             let repeatTime = 35;
-            let delayTime = 150;
+            let delayTime = 160;
             let timeoutId;
             let intervalId;
             let repeatKey;
             
-            document.addEventListener("keydown", (e) => {
-                
-                switch(e.code){
-                
-                    case "ArrowRight":
-                        if(!e.repeat){
-                            clearInterval(intervalId);
-                            clearTimeout(timeoutId);
-                            p.moveRight();
-                            repeatKey = e.code;
-                            repeatFunction = () => {p.moveRight()}
-                            timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
-                        }
-                        break;
-                    
-                    case "ArrowLeft":
-                        if(!e.repeat){
-                            clearInterval(intervalId);
-                            clearTimeout(timeoutId);
-                            p.moveLeft();
-                            repeatKey = e.code;
-                            repeatFunction = () => {p.moveLeft()}
-                            timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
-                        }
-                        break;
-                        
-                    case "ArrowUp":
-                        
-                        clearInterval(intervalId);
-                        clearTimeout(timeoutId);
-                        repeatFunction = undefined;
-                        p.put();
-                        break;
-                        
-                    case "ArrowDown":
-                        
-                        if(!e.repeat){
-                            clearInterval(intervalId);
-                            clearTimeout(timeoutId);
-                            p.fall();
-                            repeatKey = e.code;
-                            repeatFunction = () => {p.fall()}
-                            timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
-                        }
-                        break;
-                        
-                    case "KeyV":
-                        
-                        p.spinRight();
-                        break;
-                        
-                    case "KeyC":
-                        
-                        p.spinLeft();
-                        break;
-                        
-                    case "KeyS":
-                        
-                        clearInterval(intervalId);
-                        clearTimeout(timeoutId);
-                        repeatFunction = undefined;
-						p.start();
-                        break;
-						
-                    case "KeyR":
-                        
-                        clearInterval(intervalId);
-                        clearTimeout(timeoutId);
-                        repeatFunction = undefined;
-						p.reset();
-                        break;
-						
-                    case "KeyP":
-                        clearInterval(intervalId);
-                        clearTimeout(timeoutId);
-                        repeatFunction = undefined;
-						if(p.pausing){
-							
-							p.reopening();
-							
-						}else{
-							
-							p.pause();
-							
-						}
-						
-						break;
-
-                    case "KeyA":
-                        clearInterval(intervalId);
-                        clearTimeout(timeoutId);
-                        repeatFunction = undefined;
-                        p.pause();
-                        let mode = p.mode;
-                        p.reset();
-                        p.mode = mode;
-                        p.start();
-                        
-                    case "Space":
-                        clearInterval(intervalId);
-                        clearTimeout(timeoutId);
-                        repeatFunction = undefined;
-						p.hold();
-                        break;
-						
-                    case "Enter":
-                        
-                        clearInterval(intervalId);
-                        clearTimeout(timeoutId);
-                        repeatFunction = undefined;
-						p.removeLine();
-                        break;
-                        
-                }
-                                
+            document.addEventListener("keydown", (e) => {        
+                if(!e.repeat){
+                    startInput(e.code);
+                }                    
             });
 
             document.addEventListener("keyup", (e) => {
-                
-                switch(e.code){
+                if(e.code == repeatKey){
+                    endInput(e.code);
+                }                            
+            });
+
+            function startInput(kind){
+                switch(kind){
                 
                 case "ArrowRight":
-                    if(repeatKey == e.code){
-                        clearInterval(intervalId);
-                        clearTimeout(timeoutId);
-                        repeatFunction = undefined;
-                    }
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    p.moveRight();
+                    repeatKey = kind;                                
+                    repeatFunction = () => {p.moveRight()}
+                    timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
                     break;
                 
                 case "ArrowLeft":
-                    if(repeatKey == e.code){
-                        clearInterval(intervalId);
-                        clearTimeout(timeoutId);
-                        repeatFunction = undefined;
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    p.moveLeft();
+                    repeatKey = kind;                                
+                    repeatFunction = () => {p.moveLeft()}
+                    timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
+                    break;
+                    
+                case "ArrowUp":
+                    
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    repeatFunction = undefined;
+                    p.put();
+                    break;
+                    
+                case "ArrowDown":
+                    
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    p.fall();
+                    repeatKey = kind;                                
+                    repeatFunction = () => {p.fall()}
+                    timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
+                    break;
+                    
+                case "KeyV":
+                    
+                    p.spinRight();
+                    break;
+                    
+                case "KeyC":
+                    
+                    p.spinLeft();
+                    break;
+
+                case "KeyB":
+                    
+                    p.unPut();
+                    break;
+                    
+                case "KeyS":
+                    
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    repeatFunction = undefined;
+                    p.start();
+                    break;
+                    
+                case "KeyR":
+                    
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    repeatFunction = undefined;
+                    p.reset();
+                    break;
+                    
+                case "KeyP":
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    repeatFunction = undefined;
+                    if(p.pausing){
+                        
+                        p.reopening();
+                        
+                    }else{
+                        
+                        p.pause();
+                        
                     }
+                    
+                    break;
+
+                case "KeyA":
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    repeatFunction = undefined;
+                    if(p.pausing){
+                        break;
+                    }
+                    p.pause();
+                    let mode = p.mode;
+                    p.reset();
+                    p.mode = mode;
+                    p.start();
+                    break;
+                    
+                case "Space":
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    repeatFunction = undefined;
+                    p.hold();
+                    break;
+                    
+                case "Enter":
+                    
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    repeatFunction = undefined;
+                    p.removeLine();
+                    break;
+                    
+                }
+
+            }
+
+            function endInput(kind){
+
+                switch(kind){
+                
+                case "ArrowRight":
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    repeatFunction = undefined;
+                    break;
+                
+                case "ArrowLeft":
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    repeatFunction = undefined;
                     break;
                     
                 case "ArrowUp":
                     break;
                     
                 case "ArrowDown":
-                    if(repeatKey == e.code){
-                        clearInterval(intervalId);
-                        clearTimeout(timeoutId);
-                        repeatFunction = undefined;
-                    }
+                    clearInterval(intervalId);
+                    clearTimeout(timeoutId);
+                    repeatFunction = undefined;
                     break;
                     
                 case "KeyV":
@@ -204,6 +212,10 @@
                     break;
                     
                 case "KeyC":
+                    
+                    break;
+
+                case "KeyB":
                     
                     break;
                     
@@ -227,15 +239,22 @@
                 case "Enter":
                     break;
                     
-            }
-                            
+                }
 
-                                                
-            });
+            }
+            //コントローラーの接続時の処理
 			
             let af;
+            let num1;
+            let num2;
+            let sensitivity = 0.8;
+            let pressedButtons = [...Array(num1)].map((i, j) => j).map(() => (false));
+            let axes = [...Array(num2)].map((i, j) => j).map(() => (false))
+
             window.addEventListener("gamepadconnected", (e) => {
                 af = window.requestAnimationFrame(gamepadLoop);
+                num1 = navigator.getGamepads()[0].buttons.length;
+                num2 = navigator.getGamepads()[0].axes.length;
                 console.log("gamepad connected");
             });
             window.addEventListener("gamepaddisconnected", (e) => {
@@ -243,12 +262,6 @@
                 console.log("gamepad disconnected");
             });
 
-            //コントローラーの接続時の処理
-            let num1 = 18
-            let num2 = 2
-            let sensitivity = 0.8;
-            let pressedButtons = [...Array(num1)].map((i, j) => j).map(() => (false));
-            let axes = [...Array(num2)].map((i, j) => j).map(() => (false))
 
             function gamepadLoop(){
                 let gp = navigator.getGamepads()[0];
@@ -306,7 +319,6 @@
                                 clearInterval(intervalId);
                                 clearTimeout(timeoutId);
                                 p.fall();
-                                //repeatKey = e.code;                                
                                 repeatFunction = () => {p.fall();}
                                 timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
                             }
