@@ -29,6 +29,8 @@
         <script src = "Trick.js"></script>
         <script src = "MondPanel.js"></script>
         <script src = "TrickPanel.js"></script>
+        <script src = "StandardGamepad.js"></script>
+        <script src = "GamepadConfig.js"></script>
         
         <script>
             
@@ -41,7 +43,7 @@
             let p = new Play(c);
             
             //ウインドウサイズに変更があったらすべてのサイズを計算しなおす
-            window.addEventListener("resize", (e) => {c.setSize();});
+            window.addEventListener("resize", () => {c.setSize();});
            
             //Keyの処理及びそのリピート
             let repeatFunction;
@@ -130,7 +132,9 @@
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
                     repeatFunction = undefined;
-                    p.reset();
+                    if(c.page != 7){
+                        p.reset();
+                    }
                     break;
                     
                 case "KeyP":
@@ -153,7 +157,7 @@
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
                     repeatFunction = undefined;
-                    if(p.pausing){
+                    if(p.pausing || c.page == 7){
                         break;
                     }
                     p.pause();
@@ -249,13 +253,28 @@
             let num2;
             let sensitivity = 0.8;
             let pressedButtons = [...Array(num1)].map((i, j) => j).map(() => (false));
-            let axes = [...Array(num2)].map((i, j) => j).map(() => (false))
+            let axes = [...Array(num2)].map((i, j) => j).map(() => (false));
+            let gp = null;
+            let sg = null;
+            let gc = new GamepadConfig();
+            gc.setMode(1);
+            let bufferPage = 0;
 
             window.addEventListener("gamepadconnected", (e) => {
                 af = window.requestAnimationFrame(gamepadLoop);
-                num1 = navigator.getGamepads()[0].buttons.length;
-                num2 = navigator.getGamepads()[0].axes.length;
+                gp = e.gamepad;
+                sg = new StandardGamepad(gp);
+                num1 = gp.buttons.length;
+                num2 = gp.axes.length;
                 console.log("gamepad connected");
+                console.log(gp);
+
+                clearInterval(intervalId);
+                clearTimeout(timeoutId);
+                repeatFunction = undefined;
+                bufferPage = c.page;
+                p.pause();
+                c.setPage(7);
             });
             window.addEventListener("gamepaddisconnected", (e) => {
                 window.cancelAnimationFrame(af);
@@ -264,169 +283,49 @@
 
 
             function gamepadLoop(){
-                let gp = navigator.getGamepads()[0];
 
+                gp = navigator.getGamepads().filter((g) => (g != null))[0];
+                sg.reloadGamepad(gp);
                 if(!gp){
                     return;
                 }
 
-                for(i = 0; i < num1; i++){
+                for(let i = 0; i < num1; i++){
 
-                    if(pressedButtons[i] != gp.buttons[i].pressed){
-                        if(gp.buttons[i].pressed){
+                    if(pressedButtons[i] != sg.getButtonPressed(i)){
+                        if(sg.getButtonPressed(i)){
                             //ここはkeydownとほぼ同様の挙動をする
                             console.log("button" + i);
-
-                            if(i == 0){
-                                p.spinLeft();
-                            }
-
-                            if(i == 1){
-                                p.spinRight();
-                            }
-
-                            if(i == 3){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                repeatFunction = undefined;
-                                p.removeLine();
-                            }
-
-                            if(i == 7){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                repeatFunction = undefined;
-                                p.put();
-                            }
-                            if(i == 2){
-                                p.hold();
-                            }
-                            if(i == 9){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                repeatFunction = undefined;
-                                if(p.pausing){
-                                    
-                                    p.reopening();
-                                    
-                                }else{
-                                    
-                                    p.pause();
-                                    
-                                }
-                            }
-                            if(i == 13){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                p.fall();
-                                repeatFunction = () => {p.fall();}
-                                timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
-                            }
-                            if(i == 14){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                p.moveLeft();
-                                //repeatKey = e.code;
-                                repeatFunction = () => {p.moveLeft()}
-                                timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
-                            }
-                            if(i == 15){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                p.moveRight();
-                                //repeatKey = e.code;
-                                repeatFunction = () => {p.moveRight()}
-                                timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
-                            }
+                            startInput(gc.getButtonKeyCode(i));
 
                         }else{
                             //ここはkeyupと同様の挙動をする
-
-                            if(i == 13){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                repeatFunction = undefined;
-                                pressedButtons = [...Array(num1)].map((i, j) => j).map(() => (false))
-                            }
-                            if(i == 14){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                repeatFunction = undefined;
-                                pressedButtons = [...Array(num1)].map((i, j) => j).map(() => (false))
-                            }
-                            if(i == 15){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                repeatFunction = undefined;
-                                pressedButtons = [...Array(num1)].map((i, j) => j).map(() => (false));
-                            }
+                            endInput(gc.getButtonKeyCode(i));
                         }
 
                     }
 
                 }
-                for(i = 0; i < num2; i++){
+                for(let i = 0; i < num2; i++){
 
-                    if(Math.abs(axes[i]) < sensitivity && Math.abs(gp.axes[i]) >= sensitivity){
-                        if(gp.axes[i] > 0){
-                            if(i == 0){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                p.moveRight();
-                                //repeatKey = e.code;                                
-                                repeatFunction = () => {p.moveRight()}
-                                timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
-                            }
-                            if(i == 1){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                p.fall();
-                                //repeatKey = e.code;                                
-                                repeatFunction = () => {p.fall();}
-                                timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
-                            }
-
+                    if(Math.abs(axes[i]) < sensitivity && Math.abs(sg.getAxisValue(i)) >= sensitivity){
+                        console.log("axis" + i + (sg.getAxis(i) > 0 ? "+" : "-"));
+                        if(sg.getAxis(i) > 0){
+                            startInput(gc.getAxisKeyCode(i, true));
                         }else{
-                            if(i == 0){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                p.moveLeft();
-                                //repeatKey = e.code;
-                                repeatFunction = () => {p.moveLeft()}
-                                timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
-
-                            }
-
+                            startInput(gc.getAxisKeyCode(i, false));
                         }
                     }
-                    if(Math.abs(axes[i]) >= sensitivity && Math.abs(gp.axes[i]) < sensitivity){
-                        if(gp.axes[i] > 0){
-                            if(i == 0){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                repeatFunction = undefined;
-                            }
-                            if(i == 1){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                repeatFunction = undefined;
-                            }
-
+                    if(Math.abs(axes[i]) >= sensitivity && Math.abs(sg.getAxisValue(i)) < sensitivity){
+                        if(sg.getAxis(i) > 0){
+                            endInput(gc.getAxisKeyCode(i, true));
                         }else{
-                            if(i == 0){
-                                clearInterval(intervalId);
-                                clearTimeout(timeoutId);
-                                repeatFunction = undefined;
-                            }
-                            
+                            endInput(gc.getAxisKeyCode(i, false));
                         }
                     }
                 }
-                pressedButtons = [...Array(num1)].map((i, j) => j).map((e) => (gp.buttons[e].pressed));
-                axes = [...Array(num2)].map((i, j) => j).map((e) => (gp.axes[e]));
-                if(gp.buttons[0].pressed){
-                    
-                }
+                pressedButtons = [...Array(num1)].map((i, j) => j).map((e) => (sg.getButtonPressed(e)));
+                axes = [...Array(num2)].map((i, j) => j).map((e) => (sg.getAxisValue(e)));
                 af = window.requestAnimationFrame(gamepadLoop);
             }
 
@@ -449,6 +348,10 @@
 			document.getElementById("reopening").onclick = function(){p.reopening();};
 			document.getElementById("retry").onclick = function(){let mode = p.mode; p.reset(); p.mode = mode; p.start();};
 			document.getElementById("returnToTop").onclick = function(){p.reset();};
+
+            document.getElementById("gamepadMode0").onclick = function(){gc.setMode(0); p.reopening(); c.setPage(bufferPage);};
+			document.getElementById("gamepadMode1").onclick = function(){gc.setMode(1); p.reopening(); c.setPage(bufferPage);};
+			document.getElementById("gamepadMode2").onclick = function(){gc.setMode(2); p.reopening(); c.setPage(bufferPage);};
             
         </script>
         

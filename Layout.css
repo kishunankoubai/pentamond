@@ -3,6 +3,7 @@
     padding : 0px;
     margin : 0px;
     position : absolute;
+	-webkit-user-select: none;
 	user-select: none;
     
 }
@@ -56,6 +57,30 @@
 .returnButton:active{
 	
 	background-color : #552255;
+	border-color : lightGray;
+	
+}
+
+.gamepadButton{
+	
+	background-color : lightGray;
+	background : linear-gradient(20deg, lightGray 60%, rgb(239, 239, 239) );
+	border : 2px solid;
+	border-color : white;
+	border-radius : 4px;
+	box-shadow: 2px 2px 2px #444444;
+	
+}
+
+.gamepadButton:hover{
+	
+	background : rgb(77, 77, 255);
+	
+}
+
+.gamepadButton:active{
+	
+	background-color : #000088;
 	border-color : lightGray;
 	
 }

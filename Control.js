@@ -277,6 +277,28 @@ class Control{
 		button.innerText = "トップ画面へ";
         info.appendChild(button);
 		
+		button = document.createElement("button");
+		button.id = "gamepadMode0";
+		button.className = "gamepadButton";
+		button.type = "button";
+		button.innerText = "タイプ1";
+        info.appendChild(button);
+
+		button = document.createElement("button");
+		button.id = "gamepadMode1";
+		button.className = "gamepadButton";
+		button.type = "button";
+		button.innerText = "タイプ2";
+        info.appendChild(button);
+
+		button = document.createElement("button");
+		button.id = "gamepadMode2";
+		button.className = "gamepadButton";
+		button.type = "button";
+		button.innerText = "タイプ3";
+        info.appendChild(button);
+
+		
 		this.setButtonTra();
 		this.setAllButtonHidden();
 		
@@ -459,6 +481,18 @@ class Control{
 				this.setVisible("retry");
 				this.setVisible("returnToTop");
 				this.setInfoTitle("Pause");
+				break;
+
+			case 7:
+				
+				this.setVisible("info");
+				this.setVisible("gamepadMode0");
+				this.setVisible("gamepadMode1");
+				this.setVisible("gamepadMode2");
+				this.setInfoTitle("コントローラー設定");
+				this.writeInfo("<p>コントローラーが接続されました<br>"
+					+"以下からボタンの割り当てを選んでください<br>"
+					+"後から設定を変更したい場合はコントローラーを接続しなおしてください</p>");
 				break;
 
 		}
@@ -670,6 +704,16 @@ class Control{
 			
 		}
 
+		button = document.getElementsByClassName("gamepadButton");
+		for(let b of button){
+			
+			b.style.width = (this.gridW * 4) + "px";
+		    b.style.height = (this.gridH * 1.5) + "px";
+			b.style.top = (this.gridH * (this.height - 4)) + "px";
+			b.style.fontSize = (15 * this.gridW / 30) + "px";
+			
+		}
+
 		button = document.getElementById("mode0");
 		button.style.top = (this.gridH * 5) + "px";
 		
@@ -715,6 +759,15 @@ class Control{
 		
         button = document.getElementById("returnToTop");
 		button.style.top = (this.gridH * 13) + "px";
+
+		button = document.getElementById("gamepadMode0");
+		button.style.left = (this.gridW * (1)) + "px";
+
+		button = document.getElementById("gamepadMode1");
+		button.style.left = (this.gridW * (this.infoWidth / 2 - 2)) + "px";
+
+		button = document.getElementById("gamepadMode2");
+		button.style.left = (this.gridW * (this.infoWidth - 5)) + "px";
 
 		
 		let next = document.getElementById("next");
@@ -811,6 +864,13 @@ class Control{
 		}
 		
 		button = document.getElementsByClassName("returnButton");
+		for(let b of button){
+			
+			b.style.visibility = "hidden";
+			
+		}
+
+		button = document.getElementsByClassName("gamepadButton");
 		for(let b of button){
 			
 			b.style.visibility = "hidden";
