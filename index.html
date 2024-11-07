@@ -53,8 +53,9 @@
             let intervalId;
             let repeatKey;
             
-            document.addEventListener("keydown", (e) => {        
-                if(!e.repeat){
+            document.addEventListener("keydown", (e) => { 
+                //console.log(e.code);       
+                if(!e.repeat || (repeatKey == undefined && (e.code == "ArrowLeft" || e.code == "ArrowRight" || e.code == "ArrowDown"))){
                     startInput(e.code);
                 }                    
             });
@@ -72,7 +73,7 @@
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
                     p.moveRight();
-                    repeatKey = kind;                                
+                    repeatKey = kind;
                     repeatFunction = () => {p.moveRight()}
                     timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
                     break;
@@ -81,16 +82,12 @@
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
                     p.moveLeft();
-                    repeatKey = kind;                                
+                    repeatKey = kind;
                     repeatFunction = () => {p.moveLeft()}
                     timeoutId = setTimeout(() => (intervalId = setInterval(repeatFunction, repeatTime)), delayTime);
                     break;
                     
                 case "ArrowUp":
-                    
-                    clearInterval(intervalId);
-                    clearTimeout(timeoutId);
-                    repeatFunction = undefined;
                     p.put();
                     break;
                     
@@ -124,6 +121,7 @@
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
                     repeatFunction = undefined;
+                    repeatKey = undefined;
                     p.start();
                     break;
                     
@@ -132,6 +130,7 @@
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
                     repeatFunction = undefined;
+                    repeatKey = undefined;
                     if(c.page != 7){
                         p.reset();
                     }
@@ -141,6 +140,7 @@
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
                     repeatFunction = undefined;
+                    repeatKey = undefined;
                     if(p.pausing){
                         
                         p.reopening();
@@ -157,7 +157,8 @@
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
                     repeatFunction = undefined;
-                    if(p.pausing || c.page == 7){
+                    repeatKey = undefined;
+                    if(c.page != -1){
                         break;
                     }
                     p.pause();
@@ -168,9 +169,6 @@
                     break;
                     
                 case "Space":
-                    clearInterval(intervalId);
-                    clearTimeout(timeoutId);
-                    repeatFunction = undefined;
                     p.hold();
                     break;
                     
@@ -179,6 +177,7 @@
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
                     repeatFunction = undefined;
+                    repeatKey = undefined;
                     p.removeLine();
                     break;
                     
@@ -193,13 +192,15 @@
                 case "ArrowRight":
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
-                    repeatFunction = undefined;
+                    repeatFunction = undefined; 
+                    repeatKey = undefined;     
                     break;
                 
                 case "ArrowLeft":
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
                     repeatFunction = undefined;
+                    repeatKey = undefined;
                     break;
                     
                 case "ArrowUp":
@@ -208,7 +209,8 @@
                 case "ArrowDown":
                     clearInterval(intervalId);
                     clearTimeout(timeoutId);
-                    repeatFunction = undefined;
+                    repeatFunction = undefined;  
+                    repeatKey = undefined;                  
                     break;
                     
                 case "KeyV":
@@ -251,7 +253,7 @@
             let af;
             let num1;
             let num2;
-            let sensitivity = 0.8;
+            let sensitivity = 0.5;
             let pressedButtons = [...Array(num1)].map((i, j) => j).map(() => (false));
             let axes = [...Array(num2)].map((i, j) => j).map(() => (false));
             let gp = null;
@@ -276,6 +278,7 @@
                 p.pause();
                 c.setPage(7);
             });
+
             window.addEventListener("gamepaddisconnected", (e) => {
                 window.cancelAnimationFrame(af);
                 console.log("gamepad disconnected");
@@ -286,6 +289,7 @@
 
                 gp = navigator.getGamepads().filter((g) => (g != null))[0];
                 sg.reloadGamepad(gp);
+                //console.log(repeatKey + ":" + (timeoutId != null ? "timeout" : "") + ":" + (intervalId != null ? "interval" : ""));
                 if(!gp){
                     return;
                 }
@@ -303,25 +307,44 @@
                             endInput(gc.getButtonKeyCode(i));
                         }
 
+                    }else{
+                        if(sg.getButtonPressed(i) && repeatKey == undefined && (gc.getButtonKeyCode(i) == "ArrowLeft" || gc.getButtonKeyCode(i) == "ArrowRight" || gc.getButtonKeyCode(i) == "ArrowDown")){
+                            console.log("button" + i);
+                            startInput(gc.getButtonKeyCode(i));
+                        }
+
                     }
 
                 }
                 for(let i = 0; i < num2; i++){
 
-                    if(Math.abs(axes[i]) < sensitivity && Math.abs(sg.getAxisValue(i)) >= sensitivity){
+                    if(Math.abs(axes[i]) < sensitivity && Math.abs(sg.getAxisValue(i)) >= sensitivity || axes[i] * sg.getAxisValue(i) < 0 && Math.abs(sg.getAxisValue(i)) >= sensitivity){
+                        //ここはkeydownとほぼ同様の挙動をする
                         console.log("axis" + i + (sg.getAxis(i) > 0 ? "+" : "-"));
-                        if(sg.getAxis(i) > 0){
-                            startInput(gc.getAxisKeyCode(i, true));
+                        if(sg.getAxisValue(i) > 0){
+                            if(repeatKey != "ArrowLeft" && repeatKey != "ArrowRight"){
+                                startInput(gc.getAxisKeyCode(i, true));
+                            }
                         }else{
                             startInput(gc.getAxisKeyCode(i, false));
                         }
+                    }else if(Math.abs(sg.getAxisValue(i)) >= sensitivity){
+                        if(repeatKey == undefined){
+                            if(gc.getAxisKeyCode(i, true) == "ArrowLeft" || gc.getAxisKeyCode(i, true) == "ArrowRight" || gc.getAxisKeyCode(i, true) == "ArrowDown" || gc.getAxisKeyCode(i, false) == "ArrowLeft" || gc.getAxisKeyCode(i, false) == "ArrowRight" || gc.getAxisKeyCode(i, false) == "ArrowDown"){
+                                console.log("axis" + i + (sg.getAxisValue(i) > 0 ? "+" : "-"));
+                                if(sg.getAxisValue(i) > 0){
+                                    startInput(gc.getAxisKeyCode(i, true));
+                                }else{
+                                    startInput(gc.getAxisKeyCode(i, false));
+                                }
+                            }
+                        }
                     }
                     if(Math.abs(axes[i]) >= sensitivity && Math.abs(sg.getAxisValue(i)) < sensitivity){
-                        if(sg.getAxis(i) > 0){
-                            endInput(gc.getAxisKeyCode(i, true));
-                        }else{
-                            endInput(gc.getAxisKeyCode(i, false));
-                        }
+                        //ここはkeyupとほぼ同様の挙動をする
+                        //console.log("axis" + i + " : off");
+                        endInput(gc.getAxisKeyCode(i, true));
+                        endInput(gc.getAxisKeyCode(i, false));
                     }
                 }
                 pressedButtons = [...Array(num1)].map((i, j) => j).map((e) => (sg.getButtonPressed(e)));
@@ -349,9 +372,9 @@
 			document.getElementById("retry").onclick = function(){let mode = p.mode; p.reset(); p.mode = mode; p.start();};
 			document.getElementById("returnToTop").onclick = function(){p.reset();};
 
-            document.getElementById("gamepadMode0").onclick = function(){gc.setMode(0); p.reopening(); c.setPage(bufferPage);};
-			document.getElementById("gamepadMode1").onclick = function(){gc.setMode(1); p.reopening(); c.setPage(bufferPage);};
-			document.getElementById("gamepadMode2").onclick = function(){gc.setMode(2); p.reopening(); c.setPage(bufferPage);};
+            document.getElementById("gamepadMode0").onclick = function(){gc.setMode(0); c.setPage(bufferPage); p.reopening();};
+			document.getElementById("gamepadMode1").onclick = function(){gc.setMode(1); c.setPage(bufferPage); p.reopening();};
+			document.getElementById("gamepadMode2").onclick = function(){gc.setMode(2); c.setPage(bufferPage); p.reopening();};
             
         </script>
         

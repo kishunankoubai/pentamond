@@ -41,6 +41,34 @@ class GamepadConfig{
             return value[index];
 
         }
+
+        if(this.mode == 2){
+            
+            let value = 
+            [
+                "KeyC",
+                "KeyV",
+                "Space",
+                "KeyB",
+                "Enter",
+                "ArrowUp",
+                "Enter",
+                "ArrowUp",
+                "KeyA",
+                "KeyP",
+                "",
+                "",
+                "",
+                "ArrowDown",
+                "ArrowLeft",
+                "ArrowRight",
+                "KeyR",
+            ];
+    
+            return value[index];
+
+        }
+
                     
         let value = 
         [

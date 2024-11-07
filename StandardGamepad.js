@@ -10,6 +10,7 @@ class StandardGamepad{
 
     }
 
+    //gamepadを受け取ってそれに更新する
     reloadGamepad(gp){
 
         this.gp = gp;
@@ -77,7 +78,7 @@ class StandardGamepad{
     }
 
     //standard gamepadにおける配置でAxisを取得する
-        //もともとstandard gamepadならうまく動く
+    //もともとstandard gamepadならうまく動く
     getAxis(index){
         
         if(index >= this.gp.axes.length || index < 0){

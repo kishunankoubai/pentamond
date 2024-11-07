@@ -483,6 +483,7 @@ class Control{
 				this.setInfoTitle("Pause");
 				break;
 
+			//コントローラーを接続したときの画面
 			case 7:
 				
 				this.setVisible("info");
