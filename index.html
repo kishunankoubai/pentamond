@@ -21,15 +21,15 @@
 		<div id = "lineInform"></div>
 		<div id = "info"><div id = "infoTitle"></div><div id = "infoBody"></div></div>
 
-        <audio src = "SoundEffects/モンド設置音.m4a" id = "mPut"></audio>
-        <audio src = "SoundEffects/モンド右回転音.m4a" id = "mRRot"></audio>
-        <audio src = "SoundEffects/モンド左回転音.m4a" id = "mLRot"></audio>
-        <audio src = "SoundEffects/モンド移動音.m4a" id = "mMove"></audio>
-        <audio src = "SoundEffects/モンド滑り移動音.m4a" id = "mSFall"></audio>
-        <audio src = "SoundEffects/一手戻し音.m4a" id = "mUnPut"></audio>
-        <audio src = "SoundEffects/ホールド音.m4a" id = "mHold"></audio>
-        <audio src = "SoundEffects/役有り列消去音.m4a" id = "mTRem"></audio>
-        <audio src = "SoundEffects/役無し列消去音.m4a" id = "mNTRem"></audio>
+        <audio visibility = "hidden" src = "SoundEffects/モンド設置音.m4a" id = "mPut"></audio>
+        <audio visibility = "hidden" src = "SoundEffects/モンド右回転音.m4a" id = "mRRot"></audio>
+        <audio visibility = "hidden" src = "SoundEffects/モンド左回転音.m4a" id = "mLRot"></audio>
+        <audio visibility = "hidden" src = "SoundEffects/モンド移動音.m4a" id = "mMove"></audio>
+        <audio visibility = "hidden" src = "SoundEffects/モンド滑り移動音.m4a" id = "mSFall"></audio>
+        <audio visibility = "hidden" src = "SoundEffects/一手戻し音.m4a" id = "mUnPut"></audio>
+        <audio visibility = "hidden" src = "SoundEffects/ホールド音.m4a" id = "mHold"></audio>
+        <audio visibility = "hidden" src = "SoundEffects/役有り列消去音.m4a" id = "mTRem"></audio>
+        <audio visibility = "hidden" src = "SoundEffects/役無し列消去音.m4a" id = "mNTRem"></audio>
         
         <script src = "Control.js"></script>
         <script src = "Block.js"></script>
@@ -395,6 +395,9 @@
             document.getElementById("keySetting").onclick = function(){c.setPage(11);};
             document.getElementById("gamepadSetting").onclick = function(){c.setPage(12);};
             document.getElementById("return10").onclick = function(){c.setPage(10);};
+
+            document.getElementById("record").onclick = function(){c.setPage(13);};
+            document.getElementById("recordRemove").onclick = function(){c.clearRecords();};            
 
 
         </script>

@@ -24,6 +24,11 @@ class Control{
     trickList = null;
     trickOrdinal = 0;
 
+	mode0Score = null;
+	mode1Time = null;
+	mode2Time = null;
+	mode3Score = null;
+
 	currentBgm = null;
 	mPut = document.getElementById("mPut");
 	mRRot = document.getElementById("mRRot");
@@ -322,6 +327,12 @@ class Control{
         info.appendChild(button);
 
 		button = document.createElement("button");
+		button.id = "record";
+		button.className = "littleButton";
+		button.type = "button";
+        info.appendChild(button);
+
+		button = document.createElement("button");
 		button.id = "volumeSetting";
 		button.className = "button";
 		button.type = "button";
@@ -402,6 +413,13 @@ class Control{
 		label.className = "informLabel";
 		label.innerText = "BGM音量　：　" + this.BGMMasterVol;
 		info.appendChild(label);
+
+		button = document.createElement("button");
+		button.id = "recordRemove";
+		button.className = "button";
+		button.type = "button";
+		button.innerText = "データ削除";
+        info.appendChild(button);
 		
 		this.setButtonTra();
 		this.setAllButtonHidden();
@@ -503,6 +521,7 @@ class Control{
 				this.setVisible("help");
 				this.setVisible("modeSelect");
 				this.setVisible("setting");
+				this.setVisible("record");
 				this.setInfoTitle("Pentamond");
 				break;
 
@@ -597,8 +616,8 @@ class Control{
 				this.setVisible("gamepadMode2");
 				this.setInfoTitle("コントローラー設定");
 				this.writeInfo("<p>コントローラーが接続されました<br>"
-					+"以下からボタンの割り当てを選んでください<br>"
-					+"後から設定を変更したい場合はコントローラーを接続しなおしてください</p>");
+							   +"以下からボタンの割り当てを選んでください<br>"
+							   +"後から設定を変更したい場合はコントローラーを接続しなおしてください</p>");
 				break;
 
 			//右上の歯車を押した場合
@@ -638,16 +657,34 @@ class Control{
 				this.setInfoTitle("入力設定");
 				break;
 
+			//歯車、入力設定、キーボード設定を押した場合
+			//キーボードの設定画面
 			case 11:
 				this.setVisible("info");
 				this.setVisible("return10");
 				this.setInfoTitle("キーボード設定");
 				break;
 
+			//歯車、入力設定、コントローラーを押した場合
+			//コントローラーの設定画面
 			case 12:
 				this.setVisible("info");
 				this.setVisible("return10");
 				this.setInfoTitle("コントローラー設定");
+				break;
+
+			//右上のトロフィーを押した場合
+			//記録確認画面
+			case 13:
+				this.setVisible("info");
+				this.setVisible("return0");
+				this.setInfoTitle("プレイの記録");
+				this.setVisible("recordRemove");
+				this.writeInfo("通常モード　　　　 Best Score	: " + this.getBestRecord(0) + "<br>"
+							  +"十五列揃え　　　　 Best Time	: " + this.getBestRecord(1) + "<br>"
+							  +"二万点チャレンジ　 Best Time	: " + this.getBestRecord(2) + "<br>"
+							  +"役チャレンジ　　　 Best Score	: " + this.getBestRecord(3)
+				);
 				break;
 
 		}
@@ -940,6 +977,9 @@ class Control{
 
 		button = document.getElementById("gamepadSetting");
 		button.style.top = (this.gridH * 9) + "px";
+
+		button = document.getElementById("recordRemove");
+		button.style.top = (this.gridH * 13) + "px";
 
 		
 		let next = document.getElementById("next");
@@ -1365,6 +1405,57 @@ class Control{
 		}
 		if(localStorage.getItem("BGMMasterVol") != null){
 			this.BGMMasterVol = +localStorage.getItem("BGMMasterVol");
+		}
+		if(localStorage.getItem("mode0Score") != null){
+			this.mode0Score = +localStorage.getItem("mode0Score");
+		}
+		if(localStorage.getItem("mode1Time") != null){
+			this.mode1Time = +localStorage.getItem("mode1Time");
+		}
+		if(localStorage.getItem("mode2Time") != null){
+			this.mode2Time = +localStorage.getItem("mode2Time");
+		}
+		if(localStorage.getItem("mode3Score") != null){
+			this.mode3Score = +localStorage.getItem("mode3Score");
+		}
+
+	}
+
+	clearRecords(){
+		this.mode0Score = null;
+		this.mode1Time = null;
+		this.mode2Time = null;
+		this.mode3Score = null;
+		localStorage.removeItem("mode0Score");
+		localStorage.removeItem("mode1Time");
+		localStorage.removeItem("mode2Time");
+		localStorage.removeItem("mode3Score");
+		this.setPage(13);
+	}
+
+	getBestRecord(mode){
+
+		switch(mode){
+
+			case 0:
+				return this.mode0Score ?? "記録なし";
+			case 1:
+				if(this.mode1Time == null){
+					return "記録なし";
+				}else{
+					let timeRounded = Math.floor(this.mode1Time / 10);
+					return Math.floor(timeRounded / 100) + "." + ((timeRounded % 100) < 10 ? "0" + timeRounded % 100 : timeRounded % 100);
+				}
+			case 2:
+				if(this.mode2Time == null){
+					return "記録なし";
+				}else{
+					let timeRounded = Math.floor(this.mode2Time / 10);
+					return Math.floor(timeRounded / 100) + "." + ((timeRounded % 100) < 10 ? "0" + timeRounded % 100 : timeRounded % 100);
+				}
+			case 3:
+				return this.mode3Score ?? "記録なし";
+
 		}
 
 	}

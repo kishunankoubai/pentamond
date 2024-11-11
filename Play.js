@@ -307,6 +307,10 @@ class Play{
 						this.c.setTrickElement("Clear!");
 						clearInterval(this.timer2);
 						this.gameover();
+						if(this.c.mode1Time == null || this.time2 < this.c.mode1Time){
+							this.c.mode1Time = this.time2;
+							localStorage.setItem("mode1Time", this.time2);
+						}			
 					}
 					
 				}
@@ -601,7 +605,14 @@ class Play{
 			this.time1 = 0;
 			clearInterval(this.timer1);
 			this.gameover();
-			
+			if(this.mode == 0 && (this.c.mode0Score == null || this.c.mode0Score < this.score)){
+				this.c.mode0Score = this.score;
+				localStorage.setItem("mode0Score", this.score);
+			}
+			if(this.mode == 3 && (this.c.mode3Score == null || this.c.mode3Score < this.score)){
+				this.c.mode3Score = this.score;
+				localStorage.setItem("mode3Score", this.score);
+			}			
 	    }
 		
 		this.c.setTimeElement(this.time1);
@@ -623,6 +634,10 @@ class Play{
 			this.c.setTrickElement("Clear!");
 			clearInterval(this.timer2);
 			this.gameover();
+			if(this.c.mode2Time == null || this.time2 < this.c.mode2Time){
+				this.c.mode2Time = this.time2;
+				localStorage.setItem("mode2Time", this.time2);
+			}
 			
 		}
 		

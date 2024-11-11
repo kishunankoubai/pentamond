@@ -123,6 +123,16 @@
 
 }
 
+#record{
+
+	background-image: url("Images/トロフィー.png");
+	background-repeat: no-repeat;
+	background-size: contain;
+	top: 8%;
+	left: 67%;
+
+}
+
 #SEVolumeUp{
 
 	top: 30%;
