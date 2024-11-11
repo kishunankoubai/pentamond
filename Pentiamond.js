@@ -286,7 +286,7 @@ class Pentiamond{
         
         if(!this.visible || this.stop || this.fixed || this.invalidate){
             
-            return;
+            return 0;
             
         }
         
@@ -294,11 +294,17 @@ class Pentiamond{
             
             if(!this.move(-1, 1)){
                 
-                if(!this.move(1, 1));
+                if(!this.move(1, 1)){
+                    return 0;
+                }
                 
             }
+
+            return 2;
             
         }
+
+        return 1;
         
     }
 
@@ -321,19 +327,22 @@ class Pentiamond{
         
         if(!this.visible || this.stop || this.fixed || this.invalidate){
             
-            return;
+            return false;
             
         }
         
         this.remove();
+        let buffer = false;
         
         if(this.canPut(this.x, this.y, ((this.dir + dir) % 6 + 6) % 6, this.kind)){
             
             this.dir = ((this.dir + dir) % 6 + 6) % 6;
+            buffer = true;
             
         }
         
         this.display();  
+        return buffer;
         
     }
 
@@ -343,22 +352,24 @@ class Pentiamond{
 
         if(!this.visible || this.stop || this.fixed || this.invalidate){
             
-            return;
+            return false;
             
         }
 
         this.remove();
+        let buffer = false;
         
         for(let i = 0; i < this.correction[this.kind - 1][right ? 0 : 1][this.dir].length; i++){
             if(this.canPut(this.x + this.correction[this.kind - 1][right ? 0 : 1][this.dir][i][0], this.y + this.correction[this.kind - 1][right ? 0 : 1][this.dir][i][1], ((this.dir + (right ? 1 : -1)) % 6 + 6) % 6, this.kind)){
                 this.x += this.correction[this.kind - 1][right ? 0 : 1][this.dir][i][0];
                 this.y += this.correction[this.kind - 1][right ? 0 : 1][this.dir][i][1];
                 this.dir = ((this.dir + (right ? 1 : -1)) % 6 + 6) % 6;
+                buffer = true;
                 break;
             }
         }            
         this.display();  
-
+        return buffer;
 
     }
 

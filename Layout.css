@@ -85,6 +85,94 @@
 	
 }
 
+.littleButton{
+	
+	background-color : lightGray;
+	background : linear-gradient(20deg, lightGray 60%, rgb(239, 239, 239) );
+	border : 2px solid;
+	border-color : white;
+	border-radius : 4px;
+	box-shadow: 2px 2px 2px #444444;
+	font-size: 50%;
+	width : 10.5%;
+	height: 10%;
+	font-size: 200%;
+	
+}
+
+.littleButton:hover{
+	
+	background : rgb(77, 77, 255);
+	
+}
+
+.littleButton:active{
+	
+	background-color : #000088;
+	border-color : lightGray;
+	
+}
+
+#setting{
+
+	background-image: url("Images/歯車.png");
+	background-repeat: no-repeat;
+	background-size: contain;
+	top: 8%;
+	left: 82%;
+
+}
+
+#SEVolumeUp{
+
+	top: 30%;
+	left: 80%;
+
+}
+
+#SEVolumeDown{
+
+	top: 30%;
+	left: 60%;
+
+}
+
+#BGMVolumeUp{
+
+	top: 50%;
+	left: 80%;
+
+}
+
+#BGMVolumeDown{
+
+	top: 50%;
+	left: 60%;
+
+}
+
+
+.informLabel{
+
+	width : 45%;
+	height : 10%;
+
+}
+
+#SEVolume{
+
+	top : 32%;
+	left: 10%;
+
+}
+
+#BGMVolume{
+
+	top : 52%;
+	left: 10%;
+
+}
+
 .mondPanel{
 	
     background-color : brown;

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang = "ja">
     
     <head>
         
@@ -20,6 +20,16 @@
 		<div id = "trickGoal"></div>
 		<div id = "lineInform"></div>
 		<div id = "info"><div id = "infoTitle"></div><div id = "infoBody"></div></div>
+
+        <audio src = "SoundEffects/モンド設置音.m4a" id = "mPut"></audio>
+        <audio src = "SoundEffects/モンド右回転音.m4a" id = "mRRot"></audio>
+        <audio src = "SoundEffects/モンド左回転音.m4a" id = "mLRot"></audio>
+        <audio src = "SoundEffects/モンド移動音.m4a" id = "mMove"></audio>
+        <audio src = "SoundEffects/モンド滑り移動音.m4a" id = "mSFall"></audio>
+        <audio src = "SoundEffects/一手戻し音.m4a" id = "mUnPut"></audio>
+        <audio src = "SoundEffects/ホールド音.m4a" id = "mHold"></audio>
+        <audio src = "SoundEffects/役有り列消去音.m4a" id = "mTRem"></audio>
+        <audio src = "SoundEffects/役無し列消去音.m4a" id = "mNTRem"></audio>
         
         <script src = "Control.js"></script>
         <script src = "Block.js"></script>
@@ -31,15 +41,11 @@
         <script src = "TrickPanel.js"></script>
         <script src = "StandardGamepad.js"></script>
         <script src = "GamepadConfig.js"></script>
+        <script src = "IBGM.js"></script>
         
         <script>
             
-            let c = new Control;
-            c.setElement();
-            c.setSize();
-            c.paintAll();
-			c.setPage(0);
-            
+            let c = new Control();  
             let p = new Play(c);
             
             //ウインドウサイズに変更があったらすべてのサイズを計算しなおす
@@ -376,6 +382,21 @@
 			document.getElementById("gamepadMode1").onclick = function(){gc.setMode(1); c.setPage(bufferPage); p.reopening();};
 			document.getElementById("gamepadMode2").onclick = function(){gc.setMode(2); c.setPage(bufferPage); p.reopening();};
             
+            document.getElementById("setting").onclick = function(){c.setPage(8);}
+            document.getElementById("volumeSetting").onclick = function(){c.setPage(9);}
+            document.getElementById("inputSetting").onclick = function(){c.setPage(10)};
+
+            document.getElementById("SEVolumeUp").onclick = function(){c.SEVolumeChange(1);};
+            document.getElementById("SEVolumeDown").onclick = function(){c.SEVolumeChange(-1);};
+            document.getElementById("BGMVolumeUp").onclick = function(){c.BGMVolumeChange(1);};
+            document.getElementById("BGMVolumeDown").onclick = function(){c.BGMVolumeChange(-1);};
+            document.getElementById("return8").onclick = function(){c.setPage(8);};
+
+            document.getElementById("keySetting").onclick = function(){c.setPage(11);};
+            document.getElementById("gamepadSetting").onclick = function(){c.setPage(12);};
+            document.getElementById("return10").onclick = function(){c.setPage(10);};
+
+
         </script>
         
     </body>

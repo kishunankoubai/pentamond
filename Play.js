@@ -58,6 +58,7 @@ class Play{
 		if(this.mode == 0){
 			
 			this.startTimer1();
+			this.c.startBGM(0);
 			
 		}
 		
@@ -65,12 +66,14 @@ class Play{
 			
 			this.startTimer2();
             this.c.setLineInformElement(0);
+			this.c.startBGM(0);
 
 		}
 		
 		if(this.mode == 2){
 			
 			this.startTimer2();
+			this.c.startBGM(0);
 			
 		}
 		
@@ -81,6 +84,7 @@ class Play{
 			this.c.setTrickGoalElement(this.trickGoal.getName());
 			this.c.trickPanel.display(this.trickGoal.ordinal);
 			this.c.setVisible("tp1");
+			this.c.startBGM(0);
 			
 		}
 		
@@ -133,6 +137,7 @@ class Play{
         this.c.setPage(0);
 		this.c.removeAllBlock();
 		this.c.resetMondPanel();
+		this.c.startBGM(-1);
 		
 	}
 
@@ -157,21 +162,32 @@ class Play{
 
     moveRight(){
 				
-		this.pm.move(1, 0);
+		if(this.pm.move(1, 0)){
+			this.c.startSE(3);
+		}
 		this.createGhost();
 		
 	}
 
     moveLeft(){
 		
-		this.pm.move(-1, 0);
+		if(this.pm.move(-1, 0)){
+			this.c.startSE(3);
+		}
 		this.createGhost();
 
 	}
 
     fall(){
 		
-		this.pm.fall();
+		switch(this.pm.fall()){
+			case 1:
+				this.c.startSE(3);
+				break;
+			case 2:
+				this.c.startSE(4);
+				break;
+		}
 		this.createGhost();
 
 	}
@@ -188,21 +204,25 @@ class Play{
 			this.prevPm = new Pentiamond(this.c);
 			this.prevPm.catch(this.pm.x, this.pm.y, this.pm.dir, this.pm.kind);
 			this.newMond();
-			
+			this.c.startSE(0);			
 		}
 		
 	}
 
     spinRight(){
 		
-		this.pm.SRS(true);
+		if(this.pm.SRS(true)){
+			this.c.startSE(1);
+		}
 		this.createGhost();
 
 	}
 
     spinLeft(){
 		
-		this.pm.SRS(false);
+		if(this.pm.SRS(false)){
+			this.c.startSE(2);
+		}
 		this.createGhost();
 
 	}
@@ -236,6 +256,8 @@ class Play{
             this.createGhost();
 
 		}
+
+		this.c.startSE(6);
 		
 	}
 
@@ -298,6 +320,8 @@ class Play{
                 this.c.trickPanel.display(this.trickGoal.ordinal);
 				
 			}
+
+			this.c.startSE(7);
 			
 		}else{
 			
@@ -327,6 +351,7 @@ class Play{
 			}
 						
 			this.c.setTrickElement("");
+			this.c.startSE(8);
 			
 		}
 		
@@ -426,6 +451,8 @@ class Play{
 		this.pm.initialize();
 		this.pm.display();
 		this.createGhost();
+
+		this.c.startSE(5);
 
 	}
 

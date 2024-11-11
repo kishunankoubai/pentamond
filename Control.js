@@ -23,10 +23,28 @@ class Control{
     trickPanel = null;
     trickList = null;
     trickOrdinal = 0;
+
+	currentBgm = null;
+	mPut = document.getElementById("mPut");
+	mRRot = document.getElementById("mRRot");
+	mLRot = document.getElementById("mLRot");
+	mMove = document.getElementById("mMove");
+	mSFall = document.getElementById("mSFall");
+	mUnPut = document.getElementById("mUnPut");
+	mHold = document.getElementById("mHold");
+	mTRem = document.getElementById("mTRem");
+	mNTRem = document.getElementById("mNTRem");
+	maxVol = 10;
+	SEMasterVol = 6;
+	BGMMasterVol = 6;
             
     constructor(){
         
-        
+		this.restoreFromLocalStorage();
+		this.setElement();
+		this.setSize();
+		this.paintAll();
+		this.setPage(0);
         
     }
 
@@ -232,7 +250,6 @@ class Control{
 		button.className = "button";
 		button.type = "button";
 		button.innerText = "Reset";
-		//button.style.borderColor = "black"
         document.getElementsByTagName("body")[0].insertBefore(button, document.getElementById("info").nextSibling);		
 		
         button = document.createElement("button");
@@ -298,6 +315,93 @@ class Control{
 		button.innerText = "タイプ3";
         info.appendChild(button);
 
+		button = document.createElement("button");
+		button.id = "setting";
+		button.className = "littleButton";
+		button.type = "button";
+        info.appendChild(button);
+
+		button = document.createElement("button");
+		button.id = "volumeSetting";
+		button.className = "button";
+		button.type = "button";
+		button.innerText = "音量設定";
+        info.appendChild(button);
+
+		button = document.createElement("button");
+		button.id = "inputSetting";
+		button.className = "button";
+		button.type = "button";
+		button.innerText = "入力設定";
+        info.appendChild(button);
+
+		button = document.createElement("button");
+		button.id = "keySetting";
+		button.className = "button";
+		button.type = "button";
+		button.innerText = "キーボード設定";
+        info.appendChild(button);
+
+		button = document.createElement("button");
+		button.id = "gamepadSetting";
+		button.className = "button";
+		button.type = "button";
+		button.innerText = "コントローラー";
+        info.appendChild(button);
+
+		button = document.createElement("button");
+		button.id = "return8";
+		button.className = "returnButton";
+		button.type = "button";
+		button.innerText = "戻る";
+        info.appendChild(button);
+
+		button = document.createElement("button");
+		button.id = "return10";
+		button.className = "returnButton";
+		button.type = "button";
+		button.innerText = "戻る";
+        info.appendChild(button);
+
+		button = document.createElement("button");
+		button.id = "SEVolumeUp";
+		button.className = "littleButton";
+		button.type = "button";
+		button.innerText = "+";
+        info.appendChild(button);
+
+		button = document.createElement("button");
+		button.id = "SEVolumeDown";
+		button.className = "littleButton";
+		button.type = "button";
+		button.innerText = "-";
+        info.appendChild(button);
+
+		button = document.createElement("button");
+		button.id = "BGMVolumeUp";
+		button.className = "littleButton";
+		button.type = "button";
+		button.innerText = "+";
+        info.appendChild(button);
+
+		button = document.createElement("button");
+		button.id = "BGMVolumeDown";
+		button.className = "littleButton";
+		button.type = "button";
+		button.innerText = "-";
+        info.appendChild(button);
+
+		let label = document.createElement("div");
+		label.id = "SEVolume";
+		label.className = "informLabel";
+		label.innerText = "　SE音量　：　" + this.SEMasterVol;
+		info.appendChild(label);
+
+		label = document.createElement("div");
+		label.id = "BGMVolume";
+		label.className = "informLabel";
+		label.innerText = "BGM音量　：　" + this.BGMMasterVol;
+		info.appendChild(label);
 		
 		this.setButtonTra();
 		this.setAllButtonHidden();
@@ -398,6 +502,7 @@ class Control{
 				this.setVisible("mode0");
 				this.setVisible("help");
 				this.setVisible("modeSelect");
+				this.setVisible("setting");
 				this.setInfoTitle("Pentamond");
 				break;
 
@@ -494,6 +599,55 @@ class Control{
 				this.writeInfo("<p>コントローラーが接続されました<br>"
 					+"以下からボタンの割り当てを選んでください<br>"
 					+"後から設定を変更したい場合はコントローラーを接続しなおしてください</p>");
+				break;
+
+			//右上の歯車を押した場合
+			//設定画面
+			case 8:
+
+				this.setVisible("info");
+				this.setVisible("volumeSetting");
+				//this.setVisible("inputSetting");
+				this.setVisible("return0");
+				this.setInfoTitle("設定");
+				break;
+
+			//歯車、音量設定を押した場合
+			//音量設定画面
+			case 9:
+
+				this.setVisible("info");
+				this.setVisible("SEVolumeUp");
+				this.setVisible("SEVolumeDown");
+				this.setVisible("SEVolume");
+				this.setVisible("BGMVolumeUp");
+				this.setVisible("BGMVolumeDown");
+				this.setVisible("BGMVolume");
+				this.setVisible("return8");
+				this.setInfoTitle("設定");
+				break;
+
+			//歯車、入力設定を押した場合
+			//入力設定画面
+			case 10:
+
+				this.setVisible("info");
+				this.setVisible("keySetting");
+				this.setVisible("gamepadSetting");
+				this.setVisible("return8");
+				this.setInfoTitle("入力設定");
+				break;
+
+			case 11:
+				this.setVisible("info");
+				this.setVisible("return10");
+				this.setInfoTitle("キーボード設定");
+				break;
+
+			case 12:
+				this.setVisible("info");
+				this.setVisible("return10");
+				this.setInfoTitle("コントローラー設定");
 				break;
 
 		}
@@ -684,6 +838,11 @@ class Control{
 		infoBody.style.left = (this.gridW * 2) + "px";
 		infoBody.style.fontSize = (17 * this.gridW / 30) + "px";
 		
+		let label = document.getElementsByClassName("informLabel");
+		for(let l of label){
+			l.style.fontSize = (25 * this.gridW / 30) + "px";
+		}
+
 		let button = document.getElementsByClassName("button");
 		for(let b of button){
 			
@@ -770,6 +929,18 @@ class Control{
 		button = document.getElementById("gamepadMode2");
 		button.style.left = (this.gridW * (this.infoWidth - 5)) + "px";
 
+		button = document.getElementById("volumeSetting");
+		button.style.top = (this.gridH * 5) + "px";
+
+		button = document.getElementById("inputSetting");
+		button.style.top = (this.gridH * 9) + "px";
+
+		button = document.getElementById("keySetting");
+		button.style.top = (this.gridH * 5) + "px";
+
+		button = document.getElementById("gamepadSetting");
+		button.style.top = (this.gridH * 9) + "px";
+
 		
 		let next = document.getElementById("next");
 		next.style.left = (this.gridW * ((this.infoWidth - this.infoWidth / 5) - 3)) + "px";
@@ -834,6 +1005,28 @@ class Control{
 			}
 			
 		}
+
+		button = document.getElementsByClassName("gamepadButton");
+		for(let b of button){
+			
+			if(b.style.visibility == "visible"){
+				
+				b.style.transition = this.buttonTra;
+				
+			}
+			
+		}
+
+		button = document.getElementsByClassName("littleButton");
+		for(let b of button){
+			
+			if(b.style.visibility == "visible"){
+				
+				b.style.transition = this.buttonTra;
+				
+			}
+			
+		}
 		
 	}
 
@@ -847,6 +1040,21 @@ class Control{
 		}
 		
 		button = document.getElementsByClassName("returnButton");
+		for(let b of button){
+			
+			b.style.transition = "";
+			
+		}
+
+		button = document.getElementsByClassName("gamepadButton");
+		for(let b of button){
+			
+			b.style.transition = "";
+			
+		}
+
+
+		button = document.getElementsByClassName("littleButton");
 		for(let b of button){
 			
 			b.style.transition = "";
@@ -872,6 +1080,13 @@ class Control{
 		}
 
 		button = document.getElementsByClassName("gamepadButton");
+		for(let b of button){
+			
+			b.style.visibility = "hidden";
+			
+		}
+
+		button = document.getElementsByClassName("littleButton");
 		for(let b of button){
 			
 			b.style.visibility = "hidden";
@@ -938,6 +1153,11 @@ class Control{
 		this.setHidden("tp2");
 		this.writeInfo("");
 		this.setInfoTitle("");
+
+		let label = document.getElementsByClassName("informLabel");
+		for(let l of label){
+			this.setHidden(l.id);
+		}
 		
 	}
 
@@ -1019,6 +1239,134 @@ class Control{
 					   +"</p>");
 		
 		
+	}
+
+	startSE(index){
+
+		let SE;
+		let volume = 1;
+		switch(index){
+			case 0:
+				SE = this.mPut;
+				break;
+			case 1:
+				SE = this.mRRot;
+				break;
+			case 2:
+				SE = this.mLRot;
+				break;
+			case 3:
+				SE = this.mMove;
+				volume = 0.6;
+				break;
+			case 4:
+				SE = this.mSFall;
+				volume = 0.8;	
+				break;
+			case 5:
+				SE = this.mUnPut;
+				break;
+			case 6:
+				SE = this.mHold;
+				volume = 0.8;	
+				break;
+			case 7:
+				SE = this.mTRem;
+				volume = 0.8;	
+				break;
+			case 8:
+				SE = this.mNTRem;
+				volume = 0.7;	
+				break;
+			
+
+				
+		}
+
+		SE.currentTime = 0;
+		SE.play();
+		SE.volume = (this.SEMasterVol / this.maxVol) * volume;
+
+	}
+
+	startBGM(index){
+
+		let playBGM = () => {
+
+			this.currentBgm = null;
+			let volume = 1;
+			switch(index){
+
+				case 0:
+					this.currentBgm = new IBGM("BGM/ならべてトライアングル.m4a", {loopStart: 3.692, loopEnd: 144});
+					volume = 0.6;
+					break;
+
+			}
+
+			this.currentBgm.fetch().then(() => {
+
+				this.currentBgm.reset();
+				this.currentBgm.setVolume((this.BGMMasterVol / this.maxVol) * volume);
+				this.currentBgm.play();
+
+			});
+
+		};
+
+		if(this.currentBgm !=null){
+			this.currentBgm.pause().then(() => {playBGM();});
+		}else{
+			playBGM();
+		}
+
+	}
+
+	SEVolumeChange(change){
+
+		if(this.page != 9){
+			return;
+		}
+
+		if(this.SEMasterVol + change > this.maxVol){
+			this.SEMasterVol = this.maxVol;
+		}else if(this.SEMasterVol + change < 0){
+			this.SEMasterVol = 0;
+		}else{
+			this.SEMasterVol += change;
+		}
+
+		document.getElementById("SEVolume").innerText = "　SE音量　：　" + this.SEMasterVol;
+		localStorage.setItem("SEMasterVol", this.SEMasterVol);
+	}
+
+	BGMVolumeChange(change){
+
+		if(this.page != 9){
+			return;
+		}
+
+		if(this.BGMMasterVol + change > this.maxVol){
+			this.BGMMasterVol = this.maxVol;
+		}else if(this.BGMMasterVol + change < 0){
+			this.BGMMasterVol = 0;
+		}else{
+			this.BGMMasterVol += change;
+		}
+		document.getElementById("BGMVolume").innerText = "BGM音量　：　" + this.BGMMasterVol;
+		localStorage.setItem("BGMMasterVol", this.BGMMasterVol);
+
+	}
+
+	restoreFromLocalStorage(){
+
+		if(localStorage.getItem("SEMasterVol") != null){
+			this.SEMasterVol = +localStorage.getItem("SEMasterVol");
+		}
+		if(localStorage.getItem("BGMMasterVol") != null){
+			this.BGMMasterVol = +localStorage.getItem("BGMMasterVol");
+		}
+
 	}
 
 }

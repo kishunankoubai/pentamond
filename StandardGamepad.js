@@ -22,6 +22,8 @@ class StandardGamepad{
             this.name = "Wireless Gamepad (STANDARD GAMEPAD Vendor: 057e Product: 2006)";
         }else if(this.gp.id == "Wireless Gamepad (STANDARD GAMEPAD Vendor: 057e Product: 2007)"){
             this.name = "Wireless Gamepad (STANDARD GAMEPAD Vendor: 057e Product: 2007)";
+        }else if(this.gp.id == "USB 2A8K  GamePad           (Vendor: 040b Product: 6530)"){
+            this.name = "USB 2A8K  GamePad           (Vendor: 040b Product: 6530)";
         }
 
     }
@@ -41,7 +43,7 @@ class StandardGamepad{
             }
             return this.gp.buttons[value[index]];                       
         }else if(this.name == "PC Game Controller        (Vendor: 11ff Product: 3331)"){
-            //よくわからないコントローラー
+            //ELECOM JC-U2912FBK
             const value = [2, 3, 0, 1, 4, 5, 6, 7, 10, 11, 8, 9];
             if(index >= value.length){
                 return undefined;
@@ -57,6 +59,13 @@ class StandardGamepad{
         }else if(this.name == "Wireless Gamepad (STANDARD GAMEPAD Vendor: 057e Product: 2007)"){
             //ジョイコンR
             const value = [0, 1, 2, 3, 4, 5, undefined, undefined, undefined, 9, 10, undefined, undefined, undefined, undefined, undefined, 16];
+            if(index >= value.length){
+                return undefined;
+            }
+            return this.gp.buttons[value[index]];
+        }else if(this.name == "USB 2A8K  GamePad           (Vendor: 040b Product: 6530)"){
+            //ELECOM JC-U1608TWH
+            const value = [2, 3, 0, 1, undefined, undefined, 4, 5, 6, 7];
             if(index >= value.length){
                 return undefined;
             }
